@@ -8,6 +8,8 @@ RUN apt update \
             libzip-dev \
             zip \
             zlib1g-dev \
+            git \
+            unzip \
         && docker-php-ext-install \
             intl \
             opcache \
