@@ -22,7 +22,7 @@ class LoginController extends Controller
     |
     */
 
-    // use AuthenticatesUsers;
+    use AuthenticatesUsers;
 
     /**
      * Where to redirect users after login.
@@ -46,29 +46,24 @@ class LoginController extends Controller
         return view('auth.login');
     }
 
-    // public function login(Request $request)
-    // {
-    //     $credentials = $request->only('user_email', 'user_password');
-
-    //     if (Auth::attempt($credentials)) {
-    //         // 認証に成功した
-    //         return redirect()->intended('home');
-    //     }
-    // }
-
+    
     public function login(Request $request)
     {
         $this->validate($request, [
             'user_email'   => 'required',
             'user_password' => 'required|min:6'
         ]);
-
+        
         if (Auth::attempt(['user_email' => $request->user_email, 'password' => $request->user_password])) {
-
+            
             // return redirect()->intended('/home');
-            return redirect('/home');
+            return redirect()->intended($this->redirectTo);
         }
-        // return back()->withInput($request->only('name', 'remember'));
+        return redirect('/');
     }
-
+    
+    public function username()
+    {
+        return 'user_email';
+    }
 }
