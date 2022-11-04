@@ -11,14 +11,14 @@ services:
       MYSQL_DATABASE: dev_ec
       MYSQL_ROOT_PASSWORD: dev_ec
     ports:
-      - "3306:3306"
+      - "43336:3306"
     command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci --wait-timeout=1800 --connect-timeout=1800 --net-read-timeout=1800 --max-allowed-packet=1G --innodb-buffer-pool-size=1G
   php-apache:
     container_name: php-apache
     build:
       context: ./php
     ports:
-        - '8080:80'
+        - '48889:80'
     volumes:
       - ./src:/var/www/ec_Laravel
       - ./apache/default.conf:/etc/apache2/sites-enabled/000-default.conf
