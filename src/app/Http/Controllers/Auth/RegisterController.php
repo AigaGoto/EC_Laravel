@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
-use App\User;
+use App\Model\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -50,9 +50,11 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'user_name' => ['required', 'string', 'max:20'],
+            'user_email' => ['required', 'string', 'email', 'max:100', 'unique:users'],
+            'user_password' => ['required', 'string', 'min:8', 'confirmed'],
+            'user_birthday' => ['required', 'date'],
+            'user_gender' => ['required', 'integer'],
         ]);
     }
 
@@ -64,10 +66,21 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        $dir = 'sample';
+
+        $file_name = $data['user_icon_image']->getClientOriginalName();
+
+        $data['user_icon_image']->storeAs('public/' . $dir, $file_name);
+
+        // dd($data['user_icon_image']);
+
         return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+            'user_name' => $data['user_name'],
+            'user_email' => $data['user_email'],
+            'user_password' => Hash::make($data['user_password']),
+            'user_birthday' => $data['user_birthday'],
+            'user_gender' => $data['user_gender'],
+            'user_icon_image' => $file_name,
         ]);
     }
 }

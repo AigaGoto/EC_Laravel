@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 class LoginController extends Controller
 {
     /*
@@ -19,7 +22,7 @@ class LoginController extends Controller
     |
     */
 
-    use AuthenticatesUsers;
+    // use AuthenticatesUsers;
 
     /**
      * Where to redirect users after login.
@@ -37,4 +40,35 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+
+    public function showLoginForm()
+    {
+        return view('auth.login');
+    }
+
+    // public function login(Request $request)
+    // {
+    //     $credentials = $request->only('user_email', 'user_password');
+
+    //     if (Auth::attempt($credentials)) {
+    //         // 認証に成功した
+    //         return redirect()->intended('home');
+    //     }
+    // }
+
+    public function login(Request $request)
+    {
+        $this->validate($request, [
+            'user_email'   => 'required',
+            'user_password' => 'required|min:6'
+        ]);
+
+        if (Auth::attempt(['user_email' => $request->user_email, 'password' => $request->user_password])) {
+
+            // return redirect()->intended('/home');
+            return redirect('/home');
+        }
+        // return back()->withInput($request->only('name', 'remember'));
+    }
+
 }
