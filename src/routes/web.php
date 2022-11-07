@@ -22,3 +22,4 @@ Route::get('/hello', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/productList', 'ProductListController@index')->name('home');

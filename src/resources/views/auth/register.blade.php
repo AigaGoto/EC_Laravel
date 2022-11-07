@@ -95,7 +95,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="user_icon_image" class="col-md-4 col-form-label text-md-right">{{ __('性別') }}</label>
+                            <label for="user_icon_image" class="col-md-4 col-form-label text-md-right">{{ __('アイコン画像') }}</label>
 
                             <div class="col-md-6">
                                 <input id="user_icon_image" type="file" class="form-control @error('user_icon_image') is-invalid @enderror" name="user_icon_image"  >
