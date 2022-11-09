@@ -18,6 +18,8 @@ RUN apt update \
             pdo \
             pdo_mysql \
             mysqli 
+RUN a2enmod rewrite \
+    && service apache2 restart
 WORKDIR /var/www/ec_Laravel
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer

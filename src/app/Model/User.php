@@ -50,4 +50,9 @@ class User extends Authenticatable
     {
         return $this->user_password; 
     }
+
+    public function reviews()
+    {
+        return $this->hasMany('App\Model\Review', 'user_id');
+    }
 }

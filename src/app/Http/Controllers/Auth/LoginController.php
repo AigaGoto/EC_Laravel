@@ -59,7 +59,7 @@ class LoginController extends Controller
             // return redirect()->intended('/home');
             return redirect()->intended($this->redirectTo);
         }
-        return redirect('/');
+        return redirect('/user/product-list');
     }
     
     public function username()

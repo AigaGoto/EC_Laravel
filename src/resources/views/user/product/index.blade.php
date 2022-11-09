@@ -3,7 +3,7 @@
 @section('content')
 <div>
     @foreach($products as $product)
-    <img src="{{$product['product_image_file']}}" alt="{{$product['product_image_file']}}" width="100">
+        <img src="{{$product['product_image_file']}}" alt="{{$product['product_image_file']}}" width="100">
         <p>{{ $product['product_name'] }}</p>
         <p>¥{{ $product['product_price'] }}</p>
         <p>高評価</p>

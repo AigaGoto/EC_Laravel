@@ -11,4 +11,10 @@ class Review extends Model
         'user_id',
         'product_id',
     ];
+
+    public function user()
+    {
+        // return $this->belongsTo('App\Model\User', 'review_id');
+        return $this->hasOne('App\Model\User', 'review_id');
+    }
 }

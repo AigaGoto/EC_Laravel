@@ -18,15 +18,12 @@ class ProductListController extends Controller
     {
         $products = Product::with('rates', 'reviews')->paginate(5);
 
-        foreach ($products as &$product) {
-            $product['highrateCounts'] = $product->rates->where('rate_type', '=', '1')->count();
-            $product['lowrateCounts'] = $product->rates->where('rate_type', '=', '2')->count();
-            $product['reviewCounts'] = $product->reviews->count();
-
-            // 参照渡しの際は、これでメモリを節約
-            unset($product);
+        foreach ($products as $key => $value) {
+            $products[$key]['highrateCounts'] = $products[$key]->rates->where('rate_type', '=', '1')->count();
+            $products[$key]['lowrateCounts'] = $products[$key]->rates->where('rate_type', '=', '2')->count();
+            $products[$key]['reviewCounts'] = $products[$key]->reviews->count();
         }
 
-        return view('productList', compact('products'));
+        return view('user/productList', compact('products'));
     }
 }
