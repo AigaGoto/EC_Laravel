@@ -28,7 +28,7 @@ class ProductController extends Controller
             $products[$key]['reviewCounts'] = $products[$key]->reviews->count();
         }
 
-        return view('user/product/index', compact('products'));
+        return view('user.product.index', compact('products'));
     }
 
     /**
@@ -39,25 +39,17 @@ class ProductController extends Controller
      */
     public function show($product_id)
     {
-        $product = Product::with('rates', 'reviews')->find($product_id);
+        // 商品がない場合には404を表示させる
+        $product = Product::with('rates', 'reviews.user')->findOrFail($product_id);
 
         // 商品に紐づいたレビュー数と評価数を取得
         $product['highrateCounts'] = $product->rates->where('rate_type', '=', '1')->count();
         $product['lowrateCounts'] = $product->rates->where('rate_type', '=', '2')->count();
         $product['reviewCounts'] = $product->reviews->count();
 
-
         $reviews = $product->reviews;
-        dd($reviews[0]);
 
-        // $product2 = Product::find($product_id);
-        // foreach ($product2->users as $user) {
-        //     dd($user);
-        // }
-        // // $user = $reviews[0]->users;
-
-
-        return view('user/product/show', compact('product', 'reviews'));
+        return view('user.product.show', compact('product', 'reviews'));
     }
 
 }

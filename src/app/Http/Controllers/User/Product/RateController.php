@@ -5,13 +5,22 @@ namespace App\Http\Controllers\User\Product;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class ReviewController extends Controller
+class RateController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
     }
-    
+
+
+    public function ungood($product_id) {
+        $good = Rate::where('product_id', $product_id)->where('user_id', Auth::id())->first();
+        $good->delete();
+
+        session()->flash('success', 'You Unliked the Reply.');
+
+        return redirect()->back();
+    }
     /**
      * Display a listing of the resource.
      *
@@ -27,9 +36,9 @@ class ReviewController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($product_id, $rate_type)
     {
-        //
+
     }
 
     /**
@@ -38,9 +47,17 @@ class ReviewController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store($product_id, $rate_type)
     {
-        //
+        Rate::create([
+            'rate_type' => $rate_type,
+            'user_id' => Auth::id(),
+            'product_id' => $product_id,
+        ]);
+
+        // session()->flash('success', 'You Liked the Reply.');
+
+        return redirect()->back();
     }
 
     /**
@@ -62,7 +79,7 @@ class ReviewController extends Controller
      */
     public function edit($id)
     {
-        //
+        
     }
 
     /**
@@ -72,9 +89,14 @@ class ReviewController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update($product_id, $rate_type)
     {
-        //
+        Rate::where('product_id', $product_id)->where('user_id', Auth::id())
+            ->update(([
+                'rate_type' => $rate_type,
+                'user_id' => Auth::id(),
+                'product_id' => $product_id,
+            ]));
     }
 
     /**
@@ -83,8 +105,9 @@ class ReviewController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($product_id)
     {
-        //
+        $rate = Rate::where('product_id', $product_id)->where('user_id', Auth::id())->first();
+        $rate->delete();
     }
 }

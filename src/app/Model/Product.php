@@ -24,9 +24,4 @@ class Product extends Model
     {
         return $this->hasMany('App\Model\Review', 'product_id');
     }
-
-    public function users()
-    {
-        return $this->belongsToMany('App\Model\User', 'reviews', 'product_id', 'user_id');
-    }
 }

@@ -3,15 +3,15 @@
 @section('content')
 <div>
     @foreach($products as $product)
-        <img src="{{$product['product_image_file']}}" alt="{{$product['product_image_file']}}" width="100">
-        <p>{{ $product['product_name'] }}</p>
-        <p>¥{{ $product['product_price'] }}</p>
+        <img src="{{$product->product_image_file}}" alt="{{$product->product_image_file}}" width="100">
+        <a href="{{ url('/user/product/'. $product->product_id) }}">{{ $product->product_name }}</a>
+        <p>¥{{ $product->product_price }}</p>
         <p>高評価</p>
-        <p>{{ $product['highrateCounts'] }}</p>
+        <p>{{ $product->highrateCounts }}</p>
         <p>低評価</p>
-        <p>{{ $product['lowrateCounts'] }}</p>
+        <p>{{ $product->lowrateCounts }}</p>
         <p>レビュー数</p>
-        <p>{{ $product['reviewCounts'] }}</p>
+        <p>{{ $product->reviewCounts }}</p>
     @endforeach
     {{ $products->links() }}
 

@@ -2,22 +2,31 @@
 
 @section('content')
 <div>
-    <img src="{{$product['product_image_file']}}" alt="{{$product['product_image_file']}}" width="100">
-    <p>{{ $product['product_name'] }}</p>
-    <p>¥{{ $product['product_price'] }}</p>
+    <img src="{{$product->product_image_file}}" alt="{{$product->product_image_file}}" width="100">
+    <p>{{ $product->product_name }}</p>
+    <p>¥{{ $product->product_price }}</p>
     <p>高評価</p>
-    <p>{{ $product['highrateCounts'] }}</p>
+    <iconify-icon icon="icon-park-solid:good-two"></iconify-icon>
+    <p>{{ $product->highrateCounts }}</p>
     <p>低評価</p>
-    <p>{{ $product['lowrateCounts'] }}</p>
+    <iconify-icon icon="icon-park-solid:bad-two"></iconify-icon>
+    <p>{{ $product->lowrateCounts }}</p>
+    <input type="number">
+    <button>購入</button>
     <p>この商品について</p>
-    <p>{{ $product['product_description'] }}</p>
+    <p>{{ $product->product_description }}</p>
 </div>
 <div>-------------------</div>
 <div>
-    <p>レビュー(合計{{$product['reviewCounts']}}件)</p>
-    <p>ここにレビューが並ぶ</p>
+    <p>レビュー(合計{{$product->reviewCounts}}件)</p>
     @foreach($reviews as $review) 
-        <p>{{ $review['review_content'] }}</p>
+        <img src="{{$review->user->user_icon_image}}" alt="{{$review->user->user_icon_image}}" width="100">
+        <p>{{$review->user->user_name}}</p>
+        <p>{{ $review->review_content }}</p>
     @endforeach
+</div>
+<div>
+    <a href="{{ url('/') }}">全てのレビューを参照</a>
+    <a href="{{ url('/') }}">レビューを書く</a>
 </div>
 @endsection
