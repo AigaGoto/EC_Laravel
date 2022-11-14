@@ -41,13 +41,11 @@ class RateController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update($product_id, $rate_id, Request $request)
+    public function update(Request $request,$product_id, $rate_id)
     {
-        Rate::where('product_id', $product_id)->where('user_id', Auth::id())
+        Rate::where('rate_id', $rate_id)
             ->update(([
                 'rate_type' => $request->rate_type,
-                'user_id' => Auth::id(),
-                'product_id' => $product_id,
             ]));
         return redirect()->back();
     }
@@ -60,7 +58,7 @@ class RateController extends Controller
      */
     public function destroy($product_id, $rate_id)
     {
-        $rate = Rate::where('product_id', $product_id)->where('user_id', Auth::id())->first();
+        $rate = Rate::where('rate_id', $rate_id)->first();
         $rate->delete();
         return redirect()->back();
     }

@@ -54,7 +54,6 @@ class ProductController extends Controller
 
         // 認証中のユーザーが評価しているかを取得
         $rate = Rate::where('product_id', $product_id)->where('user_id', Auth::id())->first();
-        // dd($rate);
 
         return view('user.product.show', compact('product', 'reviews', 'rate'));
     }
