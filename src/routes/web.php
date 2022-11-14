@@ -18,4 +18,6 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::resource('user/product', 'User\ProductController', ['only' => ['index', 'show']]);
+Route::resource('user/product/{product_id}/rate', 'User\Product\RateController', ['only' => ['store', 'update', 'destroy']]);
+
 

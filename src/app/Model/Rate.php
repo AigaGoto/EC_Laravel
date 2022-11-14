@@ -12,6 +12,11 @@ class Rate extends Model
         'product_id',
     ];
 
+    const TYPE = [
+        1 => '高評価',
+        2 => '低評価',
+    ];
+
     /**
      * Get the user that owns the Rate
      *

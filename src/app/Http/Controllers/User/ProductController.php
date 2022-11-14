@@ -5,6 +5,8 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Model\Product;
+use App\Model\Rate;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -47,9 +49,14 @@ class ProductController extends Controller
         $product['lowrateCounts'] = $product->rates->where('rate_type', '=', '2')->count();
         $product['reviewCounts'] = $product->reviews->count();
 
+        // レビュー部分のみ切り離す
         $reviews = $product->reviews;
 
-        return view('user.product.show', compact('product', 'reviews'));
+        // 認証中のユーザーが評価しているかを取得
+        $rate = Rate::where('product_id', $product_id)->where('user_id', Auth::id())->first();
+        // dd($rate);
+
+        return view('user.product.show', compact('product', 'reviews', 'rate'));
     }
 
 }

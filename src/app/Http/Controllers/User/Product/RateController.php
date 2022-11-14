@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User\Product;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RateController extends Controller
 {
@@ -47,17 +48,20 @@ class RateController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store($product_id, $rate_type)
+    public function store($product_id, $request)
     {
+
+        dd($request);
+
         Rate::create([
-            'rate_type' => $rate_type,
+            'rate_type' => $request->rate_type,
             'user_id' => Auth::id(),
-            'product_id' => $product_id,
+            'product_id' => $request->product_id,
         ]);
 
         // session()->flash('success', 'You Liked the Reply.');
 
-        return redirect()->back();
+        return redirect()->back()->back();
     }
 
     /**
@@ -97,6 +101,7 @@ class RateController extends Controller
                 'user_id' => Auth::id(),
                 'product_id' => $product_id,
             ]));
+        return redirect()->back();
     }
 
     /**
@@ -109,5 +114,6 @@ class RateController extends Controller
     {
         $rate = Rate::where('product_id', $product_id)->where('user_id', Auth::id())->first();
         $rate->delete();
+        return redirect()->back();
     }
 }
