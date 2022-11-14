@@ -7,23 +7,63 @@
     <p>¥{{ $product->product_price }}</p>
     <p>高評価</p>
     @if($rate)
-        {{-- <a href="{{ route('rate.destroy', $product->product_id, 1)}}">
-            <iconify-icon icon="icon-park-solid:good-two"></iconify-icon>
-        </a> --}}
+        @if($rate->rate_type == 1)
+        <form method="POST" action="{{ route('rate.destroy', [$product->product_id, $rate->rate_id])}}">
+            @csrf
+                <input type="hidden" name="_method" value="DELETE">
+                <button type="submit">
+                    <iconify-icon icon="icon-park-solid:good-two" style="color: #0072BC;"></iconify-icon>
+                </button>
+            </form>
+        @else
+        <form method="POST" action="{{ route('rate.update', [$product->product_id, $rate->rate_id])}}">
+            @csrf
+                <input type="hidden" name="_method" value="PUT">
+                <input type="hidden" name="rate_type" value="1">
+                <button type="submit">
+                    <iconify-icon icon="icon-park-solid:good-two"></iconify-icon>
+                </button>
+            </form>
+        @endif
     @else
-        <form method="POST" action="{{ route('rate.store', ['product_id' =>$product->product_id]) }}">
+        <form method="POST" action="{{ route('rate.store', $product->product_id)}}">
         @csrf
-            <input type="hidden" name="product_id" value="{{$product->product_id}}">
             <input type="hidden" name="rate_type" value="1">
             <button type="submit">
                 <iconify-icon icon="icon-park-solid:good-two"></iconify-icon>
             </button>
         </form>
     @endif
-    <p>{{ $rate }}</p>
     <p>{{ $product->highrateCounts }}</p>
     <p>低評価</p>
-    <iconify-icon icon="icon-park-solid:bad-two"></iconify-icon>
+    @if($rate)
+    @if($rate->rate_type == 2)
+    <form method="POST" action="{{ route('rate.destroy', [$product->product_id, $rate->rate_id])}}">
+        @csrf
+            <input type="hidden" name="_method" value="DELETE">
+            <button type="submit">
+                <iconify-icon icon="icon-park-solid:bad-two" style="color: #0072BC;"></iconify-icon>
+            </button>
+        </form>
+    @else
+    <form method="POST" action="{{ route('rate.update', [$product->product_id, $rate->rate_id])}}">
+        @csrf
+            <input type="hidden" name="_method" value="PUT">
+            <input type="hidden" name="rate_type" value="2">
+            <button type="submit">
+                <iconify-icon icon="icon-park-solid:bad-two"></iconify-icon>
+            </button>
+        </form>
+    @endif
+@else
+    <form method="POST" action="{{ route('rate.store', $product->product_id)}}">
+    @csrf
+        <input type="hidden" name="rate_type" value="2">
+        <button type="submit">
+            <iconify-icon icon="icon-park-solid:bad-two"></iconify-icon>
+        </button>
+    </form>
+@endif
     <p>{{ $product->lowrateCounts }}</p>
     <input type="number">
     <button>購入</button>
