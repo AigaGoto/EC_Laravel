@@ -29,8 +29,6 @@ class RateController extends Controller
             'product_id' => $product_id,
         ]);
 
-        // session()->flash('success', 'You Liked the Reply.');
-
         return redirect()->back();
     }
 

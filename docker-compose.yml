@@ -24,3 +24,15 @@ services:
       - ./apache/default.conf:/etc/apache2/sites-enabled/000-default.conf
     depends_on:
       - db
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: ec-phpmydmin
+    ports:
+      - 48888:80
+    depends_on:
+      - db
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOSTS=ec-db
+      - PMA_USER=root
+      - PMA_PASSWORD=dev_ec

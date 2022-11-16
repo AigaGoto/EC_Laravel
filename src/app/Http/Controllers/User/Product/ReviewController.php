@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Model\Product;
 use App\Model\Rate;
+use App\Model\Review;
+use App\Model\Tag;
 use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
@@ -46,8 +48,41 @@ class ReviewController extends Controller
         return view('user.product.review.create', compact('product','rate'));
     }
 
-    public function confirm()
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store($product_id, Request $request)
     {
+        $review = Review::create([
+            'review_content' => $request->review_content,
+            'product_id' => $product_id,
+            'user_id' => Auth::id(),
+        ]);
+        
+        // dd($review);
+        
+        foreach ($request->tags as $tag_name) {
+            $tag = Tag::create([
+                'tag_name' => $tag_name,
+            ]);
+            $tag->reviews()->attach($review->review_id);
+        };
+        
+        return view('welcome');
+    }
 
+    public function confirm($product_id, Request $request)
+    {
+        // dd($request->tags);
+        $product = Product::with('rates')->findOrFail($product_id);
+
+        $review_content = $request->review_content;
+        $tags = $request->tags;
+        // タグの削除機能を追加後、エラーが起きそうなので、tagsをforeachで作り直す
+
+        return view('user.product.review.confirm', compact('product', 'review_content', 'tags'));
     }
 }

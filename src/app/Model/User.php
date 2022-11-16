@@ -60,16 +60,4 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Model\Rate', 'user_id');
     }
-
-    // public function isRate($product_id) {
-    //     return $this->rates()->where('product_id', $product_id)->exists();
-    // }
-
-    // public function highRate($product_id) {
-    //     if($this->isRate($product_id)){
-    //         //何もしない
-    //     } else {
-    //         $this->rates
-    //     }
-    // }
 }
