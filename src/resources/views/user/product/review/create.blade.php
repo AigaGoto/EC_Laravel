@@ -5,17 +5,18 @@
     <h1>この商品をレビュー</h1>
     <img src="{{$product->product_image_file}}" alt="{{$product->product_image_file}}" width="100">
     <p>{{ $product->product_name }}</p>
-    
+
     {{-- 高評価部分 --}}
     @if($rate)
         @if($rate->rate_type == 1)
-        <form method="POST" action="{{ route('rate.destroy', [$product->product_id, $rate->rate_id])}}">
+        @include('layouts.form.delete', ['action' => route('rate.destroy', [$product->product_id, $rate->rate_id])])
+        {{-- <form method="POST" action="{{ route('rate.destroy', [$product->product_id, $rate->rate_id])}}">
             @csrf
             <input type="hidden" name="_method" value="DELETE">
             <button type="submit">
                 <iconify-icon icon="icon-park-solid:good-two" style="color: #0072BC;"></iconify-icon>
             </button>
-        </form>
+        </form> --}}
         @else
         <form method="POST" action="{{ route('rate.update', [$product->product_id, $rate->rate_id])}}">
             @csrf
@@ -85,7 +86,7 @@
         <a href="{{url('/')}}">戻る</a>
         <input type="submit" value="レビューを確認">
     </form>
-    
+
 </div>
 
 @endsection
@@ -93,7 +94,7 @@
 <script>
     function addTag() {
         let tags = document.getElementById('tags');
-        
+
         let tagTextbox = document.getElementById('tagTextbox');
 
         // 表示用要素
@@ -105,7 +106,7 @@
         newTagSubmit.setAttribute("name", "tags[" + tagCount + "]");
         newTagSubmit.setAttribute("type", "hidden");
         newTagSubmit.setAttribute("value", tagTextbox.value);
-        
+
         // 指定した要素の中の末尾に挿入
         tags.appendChild(newTagName);
         tags.appendChild(newTagSubmit);
