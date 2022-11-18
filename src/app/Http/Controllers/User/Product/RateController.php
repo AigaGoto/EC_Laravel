@@ -23,6 +23,10 @@ class RateController extends Controller
      */
     public function store($product_id, Request $request)
     {
+        $validatedData = $request->validate([
+            'rate_type' => ['required'],
+        ]);
+
         Rate::create([
             'rate_type' => $request->rate_type,
             'user_id' => Auth::id(),
@@ -41,6 +45,10 @@ class RateController extends Controller
      */
     public function update(Request $request,$product_id, $rate_id)
     {
+        $validatedData = $request->validate([
+            'rate_type' => 'required',
+        ]);
+
         Rate::where('rate_id', $rate_id)
             ->update(([
                 'rate_type' => $request->rate_type,

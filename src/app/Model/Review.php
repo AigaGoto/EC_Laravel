@@ -17,7 +17,7 @@ class Review extends Model
 
     public function user()
     {
-        return $this->belongsTo('App\Model\User', 'review_id');
+        return $this->belongsTo('App\Model\User', 'user_id');
     }
 
     public function tags()

@@ -69,6 +69,17 @@
     <p>{{ $product->lowrateCounts }}</p>
 
     <p>-----------------------------</p>
+    {{-- バリデーションエラーの表示 --}}
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <form method="POST" action="{{ route('review.confirm', $product->product_id) }}">
         @csrf
         <h1>タグ</h1>
@@ -77,12 +88,22 @@
         <button type="button" onclick="addTag()">タグを追加</button>
 
         {{-- ここに追加されたタグを表示 --}}
-        <div id='tags'></div>
+        <div id='tags'>
+            @if(old('tags'))
+                @foreach(old('tags') as $tag_name)
+                    <div>
+                        <p>{{ $tag_name }}</p>
+                        <input class="tag_input" name="{{"tags[" . $loop->index . "]"}}" type="hidden" value="{{$tag_name}}">
+                        <button type="button" onclick="removeTag(this)">x</button>
+                    </div>
+                @endforeach
+            @endif
+        </div>
 
         <p>------------------------------</p>
         <h1>レビュー内容</h1>
         <input type="text" name="review_content" value="{{ old('review_content') }}">
-        <a href="{{url('/')}}">戻る</a>
+        <button type="button" onclick="history.back()">戻る</button>
         <input type="submit" value="レビューを確認">
     </form>
     
@@ -91,10 +112,18 @@
 @endsection
 
 <script>
+    function removeTag(button) {
+        let parent = button.parentNode;
+        parent.remove();
+    };
+
     function addTag() {
         let tags = document.getElementById('tags');
         
         let tagTextbox = document.getElementById('tagTextbox');
+        if(tagTextbox.value == "") {
+            return 0;
+        }
 
         // 表示用要素
         let newTagName = document.createElement("p");
@@ -105,16 +134,32 @@
         newTagSubmit.setAttribute("name", "tags[" + tagCount + "]");
         newTagSubmit.setAttribute("type", "hidden");
         newTagSubmit.setAttribute("value", tagTextbox.value);
+
+        // 削除用ボタン
+        let deleteButton = document.createElement("button");
+        deleteButton.setAttribute("type", "button");
+        deleteButton.textContent = "x"
+        deleteButton.setAttribute("onclick", "removeTag(this)")
+
+        // 上記の要素を一つのdivに入れて挿入
+        let newDiv = document.createElement("div");
+        newDiv.appendChild(newTagName);
+        newDiv.appendChild(newTagSubmit);
+        newDiv.appendChild(deleteButton);
         
-        // 指定した要素の中の末尾に挿入
-        tags.appendChild(newTagName);
-        tags.appendChild(newTagSubmit);
+        tags.appendChild(newDiv);
 
         // インプットの中身を削除
         tagTextbox.value = "";
 
         tagCount += 1;
-    }
+    };
 
     let tagCount = 0;
+
+    // タグの長さを取得
+    window.addEventListener('DOMContentLoaded', () => {
+        tagCount = document.getElementsByClassName('tag_input').length;
+    })
+    
 </script>
