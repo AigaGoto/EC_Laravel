@@ -59,16 +59,16 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="">
+                                    <a class="dropdown-item" href="{{route('product.index')}}">
                                         {{ __('商品一覧') }}
                                     </a>
-                                    <a class="dropdown-item" href="">
+                                    <a class="dropdown-item" href="{{route('user.review.index')}}">
                                         {{ __('過去のレビュー') }}
                                     </a>
-                                    <a class="dropdown-item" href="">
+                                    <a class="dropdown-item" href="{{route('user.purchaseHistory')}}">
                                         {{ __('購入履歴') }}
                                     </a>
-                                    <a class="dropdown-item" href="">
+                                    <a class="dropdown-item" href="{{route('user.profile')}}">
                                         {{ __('ユーザー情報') }}
                                     </a>
                                     <a class="dropdown-item" href="{{ route('logout') }}"

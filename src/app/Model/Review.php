@@ -20,8 +20,13 @@ class Review extends Model
         return $this->belongsTo('App\Model\User', 'user_id');
     }
 
+    public function product()
+    {
+        return $this->belongsTo('App\Model\Product', 'product_id');
+    }
+
     public function tags()
     {
-        return $this->belongsToMany(Tag::class, 'review2tags');
+        return $this->belongsToMany('App\Model\Tag', 'review2tags', 'review_id', 'tag_id');
     }
 }

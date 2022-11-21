@@ -42,15 +42,15 @@ class ProductController extends Controller
     public function show($product_id)
     {
         // 商品がない場合には404を表示させる
-        $product = Product::with('rates', 'reviews.user')->findOrFail($product_id);
+        $product = Product::with('rates', 'reviews.user', 'reviews.tags')->findOrFail($product_id);
 
         // 商品に紐づいたレビュー数と評価数を取得
         $product['highrateCounts'] = $product->rates->where('rate_type', '=', '1')->count();
         $product['lowrateCounts'] = $product->rates->where('rate_type', '=', '2')->count();
         $product['reviewCounts'] = $product->reviews->count();
 
-        // レビュー部分のみ切り離す
-        $reviews = $product->reviews;
+        // レビュー部分を3件取得
+        $reviews = $product->reviews->take(3);
 
         // 認証中のユーザーが評価しているかを取得
         $rate = Rate::where('product_id', $product_id)->where('user_id', Auth::id())->first();

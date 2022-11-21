@@ -22,6 +22,6 @@ class Product extends Model
 
     public function reviews()
     {
-        return $this->hasMany('App\Model\Review', 'product_id');
+        return $this->hasMany('App\Model\Review', 'product_id')->orderBy('updated_at', 'desc');
     }
 }

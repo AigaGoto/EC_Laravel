@@ -17,9 +17,15 @@ Route::get('/', function () {
 
 Auth::routes();
 
+// user routing
 Route::resource('user/product', 'User\ProductController', ['only' => ['index', 'show']]);
 Route::resource('user/product/{product_id}/rate', 'User\Product\RateController', ['only' => ['store', 'update', 'destroy']]);
 Route::resource('user/product/{product_id}/review', 'User\Product\ReviewController', ['only' => ['index', 'create', 'store']]);
 Route::post('user/product/{product_id}/review/confirm', 'User\Product\ReviewController@confirm')->name('review.confirm');
+Route::group(['as' => 'user.'], function() {
+    Route::resource('user/review', 'User\ReviewController', ['only' => ['index', 'edit']]);
+    Route::get('user/purchase-history', 'UserController@purchaseHistory')->name('purchaseHistory');
+    Route::get('user/profile', 'UserController@profile')->name('profile');
+}); 
 
-
+// admin routing

@@ -25,7 +25,16 @@ class ReviewController extends Controller
      */
     public function index($product_id)
     {
-        return view('user.product.review.index');
+        // 商品がない場合には404を表示させる
+        $product = Product::with('rates', 'reviews.user', 'reviews.tags')->findOrFail($product_id);
+
+        // 商品に紐づいたレビュー数を取得
+        $product['reviewCounts'] = $product->reviews->count();
+
+        // レビュー部分のみ切り離す
+        $reviews = $product->reviews()->paginate(5);
+
+        return view('user.product.review.index', compact('product', 'reviews'));
     }
 
     /**
@@ -94,17 +103,15 @@ class ReviewController extends Controller
         // dd($request->tags);
         $validatedData = $request->validate([
             'tags' => 'array',
-            'tags.*' => 'max:100',
+            'tags.*' => 'max:100|distinct',
             'review_content' => 'required',
         ]);
 
         $product = Product::with('rates')->findOrFail($product_id);
-
         $review_content = $request->review_content;
-
         $tags = $request->tags;
-        // タグの削除機能を追加後、エラーが起きそうなので、tagsをforeachで作り直す
+        $now = now();
 
-        return view('user.product.review.confirm', compact('product', 'review_content', 'tags'));
+        return view('user.product.review.confirm', compact('product', 'review_content', 'tags', 'now'));
     }
 }

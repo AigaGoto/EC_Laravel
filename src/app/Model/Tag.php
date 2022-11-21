@@ -3,7 +3,6 @@
 namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Model\Review;
 
 class Tag extends Model
 {
@@ -17,6 +16,6 @@ class Tag extends Model
 
     public function reviews()
     {
-        return $this->belongsToMany(Review::class, 'review2tags', 'tag_id', 'review_id');
+        return $this->belongsToMany('App\Model\Review', 'review2tags', 'tag_id', 'review_id');
     }
 }

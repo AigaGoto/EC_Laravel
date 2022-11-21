@@ -17,7 +17,8 @@ RUN apt update \
             opcache \
             pdo \
             pdo_mysql \
-            mysqli 
+            mysqli
+# ここでapacheの処理を行うことで、変更が反映される
 RUN a2enmod rewrite \
     && service apache2 restart
 WORKDIR /var/www/ec_Laravel

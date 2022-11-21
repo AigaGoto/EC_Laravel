@@ -103,7 +103,7 @@
         <p>------------------------------</p>
         <h1>レビュー内容</h1>
         <input type="text" name="review_content" value="{{ old('review_content') }}">
-        <button type="button" onclick="history.back()">戻る</button>
+        <a href="{{ route('product.show', $product->product_id) }}">戻る</a>
         <input type="submit" value="レビューを確認">
     </form>
     
@@ -121,6 +121,10 @@
         let tags = document.getElementById('tags');
         
         let tagTextbox = document.getElementById('tagTextbox');
+
+        // 空白文字を消す
+        tagTextbox.value = tagTextbox.value.replace(/\s+/g, "");
+
         if(tagTextbox.value == "") {
             return 0;
         }

@@ -46,7 +46,7 @@ class RateController extends Controller
     public function update(Request $request,$product_id, $rate_id)
     {
         $validatedData = $request->validate([
-            'rate_type' => 'required',
+            'rate_type' => 'required|between:1,2',
         ]);
 
         Rate::where('rate_id', $rate_id)
