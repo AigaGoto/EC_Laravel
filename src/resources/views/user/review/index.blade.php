@@ -6,11 +6,14 @@
     @foreach ($reviews as $review)
         <img src="{{$review->product->product_image_file}}" alt="{{$review->product->product_image_file}}" width="100">
         <p>{{ $review->product->product_name }}</p>
-        <p>{{ $review->updated_at }}</p>
+        <p>{{ $review->updated_at->format('Y/m/d H:i:s') }}</p>
         @foreach($review->tags as $tag)
             <p>{{  $tag->tag_name }}</p>
         @endforeach
         <p>{{ $review->review_content }}</p>
+        @if ($review->canEdit)
+            <a href="{{ route('user.review.edit', $review->review_id) }}">編集</a>
+        @endif
     @endforeach
     {{ $reviews->links() }}
 

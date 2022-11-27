@@ -22,7 +22,13 @@ class ReviewController extends Controller
     {
         $user = User::find(Auth::id());
         $reviews = $user->reviews()->paginate(5);
-        // dd($reviews[0]->product);
+        foreach ($reviews as $key=>$review) {
+            $diff_hours = now()->diffInHours($review->created_at);
+            if($diff_hours <= 12) {
+                $True = True;
+                $reviews[$key]['canEdit']= $True;
+            }
+        }
         return view('user.review.index', compact('reviews'));
     }
 
@@ -35,5 +41,10 @@ class ReviewController extends Controller
     public function edit($id)
     {
         return view('user.review.edit');
+    }
+
+    public function update()
+    {
+
     }
 }

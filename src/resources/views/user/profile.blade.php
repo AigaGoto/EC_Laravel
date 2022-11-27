@@ -3,13 +3,15 @@
 @section('content')
 <div>
     <h1>ユーザー情報</h1>
-    <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('user.profileUpdate') }}" enctype="multipart/form-data">
         @csrf
+        
+        <input type="hidden" name="_method" value="PUT">
 
         <label for="user_icon_image" >{{ __('アイコン画像') }}</label>
         <img src="{{asset('storage/sample/' . Auth::user()->user_icon_image)}}" alt="{{Auth::user()->user_icon_image}}" width="100">
         <div>
-            <input id="user_icon_image" type="file" >
+            <input id="user_icon_image" type="file" name="user_icon_image" value="{{ Auth::user()->user_icon_image }}">
 
             @error('user_icon_image')
                 <span class="invalid-feedback" role="alert">
@@ -57,10 +59,17 @@
         <label for="user_gender" >{{ __('性別') }}</label>
 
         <div>
-            <input id="user_gender1" type="radio"  value="1"  name="user_gender" checked>
-            <label for="user_gender1" class="form-check-label">男</label>
-            <input id="user_gender2" type="radio" value="2"  name="user_gender"  >
-            <label for="user_gender1" class="form-check-label">女</label>
+            @if (Auth::user()->user_gender == 1)
+                <input id="user_gender1" type="radio"  value="1"  name="user_gender" checked>
+                <label for="user_gender1" class="form-check-label">男</label>
+                <input id="user_gender2" type="radio" value="2"  name="user_gender"  >
+                <label for="user_gender1" class="form-check-label">女</label>
+            @else
+                <input id="user_gender1" type="radio"  value="1"  name="user_gender">
+                <label for="user_gender1" class="form-check-label">男</label>
+                <input id="user_gender2" type="radio" value="2"  name="user_gender" checked >
+                <label for="user_gender1" class="form-check-label">女</label>
+            @endif
 
             @error('user_gender')
                 <span class="invalid-feedback" role="alert">
@@ -68,5 +77,9 @@
                 </span>
             @enderror
         </div>
+
+        <input type="submit" value="更新">
+    </form>
+    
 </div>
 @endsection

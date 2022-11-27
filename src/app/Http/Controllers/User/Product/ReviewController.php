@@ -41,7 +41,7 @@ class ReviewController extends Controller
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
-     */
+     *
     public function create($product_id)
     {
         // if(Session::get('_old_input')) {
@@ -87,13 +87,15 @@ class ReviewController extends Controller
             'user_id' => Auth::id(),
         ]);
         
-        foreach ($request->tags as $tag_name) {
-            $tag = Tag::firstOrCreate([
-                'tag_name' => $tag_name
-            ]);
-            
-            $tag->reviews()->attach($review->review_id);
-        };
+        if ($request->tags != null) {
+            foreach ($request->tags as $tag_name) {
+                $tag = Tag::firstOrCreate([
+                    'tag_name' => $tag_name
+                ]);
+                
+                $tag->reviews()->attach($review->review_id);
+            };
+        }
 
         return redirect()->route('review.index', ['product_id' => $product_id]);
     }
@@ -110,8 +112,7 @@ class ReviewController extends Controller
         $product = Product::with('rates')->findOrFail($product_id);
         $review_content = $request->review_content;
         $tags = $request->tags;
-        $now = now();
 
-        return view('user.product.review.confirm', compact('product', 'review_content', 'tags', 'now'));
+        return view('user.product.review.confirm', compact('product', 'review_content', 'tags'));
     }
 }

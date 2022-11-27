@@ -24,7 +24,7 @@ class RateController extends Controller
     public function store($product_id, Request $request)
     {
         $validatedData = $request->validate([
-            'rate_type' => ['required'],
+            'rate_type' => 'required|between:1,2',
         ]);
 
         Rate::create([

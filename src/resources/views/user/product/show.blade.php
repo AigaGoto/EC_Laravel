@@ -79,7 +79,7 @@
     @foreach($reviews as $review) 
         <img src="{{asset('storage/sample/' . $review->user->user_icon_image)}}" alt="{{$review->user->user_icon_image}}" width="100">
         <p>{{$review->user->user_name}}</p>
-        <p>{{ $review->updated_at }}</p>
+        <p>{{ $review->updated_at->format('Y/m/d H:i:s') }}</p>
         @foreach($review->tags as $tag)
             <p>{{  $tag->tag_name }}</p>
         @endforeach

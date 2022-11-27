@@ -68,6 +68,8 @@ class RegisterController extends Controller
     {
         $dir = 'sample';
 
+        // ユーザーIDの一番後ろ + 1 でfile_nameを設定する
+        // extension拡張子を取得する
         $file_name = $data['user_icon_image']->getClientOriginalName();
 
         $data['user_icon_image']->storeAs('public/' . $dir, $file_name);

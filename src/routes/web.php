@@ -23,9 +23,10 @@ Route::resource('user/product/{product_id}/rate', 'User\Product\RateController',
 Route::resource('user/product/{product_id}/review', 'User\Product\ReviewController', ['only' => ['index', 'create', 'store']]);
 Route::post('user/product/{product_id}/review/confirm', 'User\Product\ReviewController@confirm')->name('review.confirm');
 Route::group(['as' => 'user.'], function() {
-    Route::resource('user/review', 'User\ReviewController', ['only' => ['index', 'edit']]);
+    Route::resource('user/review', 'User\ReviewController', ['only' => ['index', 'edit', 'update']]);
     Route::get('user/purchase-history', 'UserController@purchaseHistory')->name('purchaseHistory');
     Route::get('user/profile', 'UserController@profile')->name('profile');
+    Route::put('user/profile/update', 'UserController@profileUpdate')->name('profileUpdate');
 }); 
 
 // admin routing
