@@ -24,6 +24,7 @@ Route::resource('user/product/{product_id}/review', 'User\Product\ReviewControll
 Route::post('user/product/{product_id}/review/confirm', 'User\Product\ReviewController@confirm')->name('review.confirm');
 Route::group(['as' => 'user.'], function() {
     Route::resource('user/review', 'User\ReviewController', ['only' => ['index', 'edit', 'update']]);
+    Route::post('user/review/{review_id}/confirm', 'User\ReviewController@confirm')->name('review.confirm');
     Route::get('user/purchase-history', 'UserController@purchaseHistory')->name('purchaseHistory');
     Route::get('user/profile', 'UserController@profile')->name('profile');
     Route::put('user/profile/update', 'UserController@profileUpdate')->name('profileUpdate');

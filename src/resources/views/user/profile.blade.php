@@ -1,8 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
+@include('layouts.sidebar')
 <div>
     <h1>ユーザー情報</h1>
+
     <form method="POST" action="{{ route('user.profileUpdate') }}" enctype="multipart/form-data">
         @csrf
         
@@ -59,17 +61,10 @@
         <label for="user_gender" >{{ __('性別') }}</label>
 
         <div>
-            @if (Auth::user()->user_gender == 1)
-                <input id="user_gender1" type="radio"  value="1"  name="user_gender" checked>
-                <label for="user_gender1" class="form-check-label">男</label>
-                <input id="user_gender2" type="radio" value="2"  name="user_gender"  >
-                <label for="user_gender1" class="form-check-label">女</label>
-            @else
-                <input id="user_gender1" type="radio"  value="1"  name="user_gender">
-                <label for="user_gender1" class="form-check-label">男</label>
-                <input id="user_gender2" type="radio" value="2"  name="user_gender" checked >
-                <label for="user_gender1" class="form-check-label">女</label>
-            @endif
+            <input id="user_gender1" type="radio"  value="1"  name="user_gender" @if (Auth::user()->user_gender == 1) {{"checked"}} @endif>
+            <label for="user_gender1" class="form-check-label">男</label>
+            <input id="user_gender2" type="radio" value="2"  name="user_gender"  @if (Auth::user()->user_gender == 2) {{"checked"}} @endif>
+            <label for="user_gender1" class="form-check-label">女</label>
 
             @error('user_gender')
                 <span class="invalid-feedback" role="alert">

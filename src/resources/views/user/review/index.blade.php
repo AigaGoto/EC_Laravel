@@ -1,18 +1,19 @@
 @extends('layouts.app')
 
 @section('content')
+@include('layouts.sidebar')
 <div>
     <h1>過去のレビュー</h1>
     @foreach ($reviews as $review)
         <img src="{{$review->product->product_image_file}}" alt="{{$review->product->product_image_file}}" width="100">
         <p>{{ $review->product->product_name }}</p>
-        <p>{{ $review->updated_at->format('Y/m/d H:i:s') }}</p>
+        <p>{{ $review->created_at->format('Y/m/d H:i:s') }}</p>
         @foreach($review->tags as $tag)
             <p>{{  $tag->tag_name }}</p>
         @endforeach
         <p>{{ $review->review_content }}</p>
         @if ($review->canEdit)
-            <a href="{{ route('user.review.edit', $review->review_id) }}">編集</a>
+            <p><a href="{{ route('user.review.edit', $review->review_id) }}">編集</a></p>
         @endif
     @endforeach
     {{ $reviews->links() }}

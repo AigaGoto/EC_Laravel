@@ -42,11 +42,9 @@ class ReviewController extends Controller
      *
      * @return \Illuminate\Http\Response
      *
+     */
     public function create($product_id)
     {
-        // if(Session::get('_old_input')) {
-        //     dd(Session::get('_old_input'));
-        // }
         // 商品がない場合には404を表示させる
         $product = Product::with('rates')->findOrFail($product_id);
 
@@ -102,7 +100,6 @@ class ReviewController extends Controller
 
     public function confirm($product_id, Request $request)
     {
-        // dd($request->tags);
         $validatedData = $request->validate([
             'tags' => 'array',
             'tags.*' => 'max:100|distinct',

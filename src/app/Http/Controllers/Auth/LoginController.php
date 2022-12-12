@@ -56,10 +56,9 @@ class LoginController extends Controller
         
         if (Auth::attempt(['user_email' => $request->user_email, 'password' => $request->user_password])) {
             
-            // return redirect()->intended('/home');
             return redirect()->intended($this->redirectTo);
         }
-        return redirect('/user/product-list');
+        return redirect('/login');
     }
     
     public function username()

@@ -1,13 +1,16 @@
 @extends('layouts.app')
 
 @section('content')
+@include('layouts.sidebar')
 <div>
     <h1>購入履歴</h1>
 
     @foreach ($orders as $order) 
         <img src="{{$order->product->product_image_file}}" alt="{{$order->product->product_image_file}}" width="100">
         <p>{{ $order->product->product_name }}</p>
+        <p>注文日:</p>
         <p>{{ $order->created_at->format('Y/m/d') }}</p>
+        <p>金額:</p>
         <p>¥{{ $order->product->product_price }}</p>
     @endforeach
     {{ $orders->links() }}
