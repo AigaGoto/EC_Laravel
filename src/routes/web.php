@@ -31,3 +31,10 @@ Route::group(['as' => 'user.'], function() {
 }); 
 
 // admin routing
+Route::group(['prefix'=>'admin','as' => 'admin.'], function() {
+    Route::get('login', 'Admin\LoginController@showLoginForm')->name('login');
+    Route::post('login', 'Admin\LoginController@login');
+    Route::post('logout', 'Admin\LoginController@logout')->name('logout');
+    Route::get('home', 'Admin\HomeController@index')->name('home');
+    Route::resource('review', 'Admin\ReviewController', ['only' => ['index', 'show', 'destroy']]);
+});

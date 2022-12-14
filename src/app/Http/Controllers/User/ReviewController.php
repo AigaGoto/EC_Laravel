@@ -41,7 +41,7 @@ class ReviewController extends Controller
      */
     public function edit($review_id)
     {
-        $review = Review::with('product', 'tags')->findorFail($review_id);
+        $review = Review::with('product', 'tags')->findOrFail($review_id);
         if (now()->diffInHours($review->created_at) > 12) {
             abort(404);
         }
