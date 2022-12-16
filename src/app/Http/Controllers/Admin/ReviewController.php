@@ -18,9 +18,18 @@ class ReviewController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $reviews = Review::with('user', 'product')->paginate(5);
+        $keyword = $request->input('keyword');
+
+        $query = Review::query();
+
+        // キーワードが入力されているなら、検索する
+        if (!empty($keyword)) {
+            $query->where('review_content', 'LIKE', "%{$keyword}%");
+        }
+
+        $reviews = $query->paginate(5);
 
         // レビューに基づいたユーザーと商品のデータを紐付ける
         foreach ($reviews as $key => $value) {
@@ -30,7 +39,7 @@ class ReviewController extends Controller
             $reviews[$key]['product_name'] = $reviews[$key]->product->product_name;
         }
 
-        return view('admin.review.index', compact('reviews'));
+        return view('admin.review.index', compact('reviews', 'keyword'));
     }
 
 

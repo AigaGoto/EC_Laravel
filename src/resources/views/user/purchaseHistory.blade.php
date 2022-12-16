@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-@include('layouts.sidebar')
+@include('layouts.userSidebar')
 <div>
     <h1>購入履歴</h1>
 

@@ -1,13 +1,16 @@
-@extends('layouts.app_admin')
+@extends('layouts.adminApp')
 
 @section('content')
+@include('layouts.adminSidebar')
 <div>
     <h1>レビュー一覧</h1>
     
     <div>
-        <p>キーワードで検索</p>
-        <input type="text">
-        <button><iconify-icon icon="ic:baseline-search"></iconify-icon></button>
+        <form method="GET" action="{{ route('admin.review.index') }}">
+            <p>キーワードで検索</p>
+            <input type="search" name="keyword" value="@if (isset($keyword)) {{ $keyword }} @endif">
+            <button type="submit"><iconify-icon icon="ic:baseline-search"></iconify-icon></button>
+        </form>
     </div>
     <div>
         <table>
@@ -35,7 +38,7 @@
             @endforeach
         </table>
 
-    {{ $reviews->links() }}
+    {{ $reviews->appends(['keyword' => $keyword ?? ''])->links() }}
     
     @if (count($reviews) >0)
     <p>全{{ $reviews->total() }}件中 

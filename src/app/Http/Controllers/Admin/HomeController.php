@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
  
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Model\Review;
  
 class HomeController extends Controller
 {
@@ -24,7 +25,16 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $
-        return view('admin.home');
+        $reviews = Review::orderBy('created_at', 'DESC')->take(5)->get();
+
+        // レビューに基づいたユーザーと商品のデータを紐付ける
+        foreach ($reviews as $key => $value) {
+            $reviews[$key]['user_id'] = $reviews[$key]->user->user_id;
+            $reviews[$key]['user_name'] = $reviews[$key]->user->user_name;
+            $reviews[$key]['product_id'] = $reviews[$key]->product->product_id;
+            $reviews[$key]['product_name'] = $reviews[$key]->product->product_name;
+        }
+        
+        return view('admin.home', compact('reviews'));
     }
 }

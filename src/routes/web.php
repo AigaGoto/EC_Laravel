@@ -37,4 +37,10 @@ Route::group(['prefix'=>'admin','as' => 'admin.'], function() {
     Route::post('logout', 'Admin\LoginController@logout')->name('logout');
     Route::get('home', 'Admin\HomeController@index')->name('home');
     Route::resource('review', 'Admin\ReviewController', ['only' => ['index', 'show', 'destroy']]);
+    Route::resource('user', 'Admin\UserController', ['only' => ['index', 'edit', 'update']]);
+    Route::resource('product', 'Admin\ProductController', ['only' => ['index', 'edit', 'update', 'destroy']]);
+    Route::resource('admin', 'Admin\AdminController', ['only' => ['index', 'create', 'store']]);
+    Route::resource('system-info', 'Admin\SystemInfoController', ['only' => ['index', 'update']]);
+    Route::resource('profile', 'Admin\ProfileController', ['only' => ['index', 'update']]);
+    Route::get('log', 'Admin\LogController@index')->name('log');
 });

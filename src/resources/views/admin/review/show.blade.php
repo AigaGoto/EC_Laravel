@@ -1,6 +1,7 @@
-@extends('layouts.app_admin')
+@extends('layouts.adminApp')
 
 @section('content')
+@include('layouts.adminSidebar')
 <div>
     <h1>レビュー詳細</h1>
     <img src="{{$product->product_image_file}}" alt="{{$product->product_image_file}}" width="100">
