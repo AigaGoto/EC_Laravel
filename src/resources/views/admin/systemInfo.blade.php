@@ -4,5 +4,15 @@
 @include('layouts.adminSidebar')
 <div>
     <h1>システム情報</h1>
+
+    <form method="POST" action="{{ route('admin.systemInfo.update') }}">
+        @csrf
+        <input type="hidden" name="_method" value="PUT">
+
+        <label for="error_email">エラー通知先メールアドレス</label>
+        <p><input type="error_email" name="error_email" value="{{ $error_email }}"></p>
+
+        <input type="submit" value="更新">
+    </form>
 </div>
 @endsection

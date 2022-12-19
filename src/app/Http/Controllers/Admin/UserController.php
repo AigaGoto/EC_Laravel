@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Model\User;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -79,6 +80,16 @@ class UserController extends Controller
             'user_birthday' => $request->user_birthday,
             'user_gender' => $request->user_gender,
             'user_icon_image' => $file_name,
+        ]);
+
+        // ログの作成
+        Log::create([
+            'log_type' => 2,
+            'log_table_type' => 1,
+            'log_ip_address' => $request->ip(),
+            'log_user_agent' => $request->header('User-Agent'),
+            'user_id' => Auth::id(),
+            'log_path' => $request->path(),
         ]);
 
         return redirect()->back();

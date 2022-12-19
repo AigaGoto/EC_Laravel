@@ -8,7 +8,7 @@
     <div>
         <form method="GET" action="{{ route('admin.product.index') }}">
             <p>商品名で検索</p>
-            <input type="search" name="product_name" value="@if (isset($product_name)) {{ $product_name }} @endif">
+            <input type="search" name="product_name" value="@if(isset($product_name)){{ $product_name }}@endif">
             <button type="submit"><iconify-icon icon="ic:baseline-search"></iconify-icon></button>
         </form>
     </div>

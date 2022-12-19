@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Model\Rate;
+use App\Model\Log;
 
 class RateController extends Controller
 {
@@ -33,6 +34,16 @@ class RateController extends Controller
             'product_id' => $product_id,
         ]);
 
+        // ログの作成
+        Log::create([
+            'log_type' => 1,
+            'log_table_type' => 4,
+            'log_ip_address' => $request->ip(),
+            'log_user_agent' => $request->header('User-Agent'),
+            'user_id' => Auth::id(),
+            'log_path' => $request->path(),
+        ]);
+
         return redirect()->back();
     }
 
@@ -53,6 +64,17 @@ class RateController extends Controller
             ->update(([
                 'rate_type' => $request->rate_type,
             ]));
+
+        // ログの作成
+        Log::create([
+            'log_type' => 2,
+            'log_table_type' => 4,
+            'log_ip_address' => $request->ip(),
+            'log_user_agent' => $request->header('User-Agent'),
+            'user_id' => Auth::id(),
+            'log_path' => $request->path(),
+        ]);
+
         return redirect()->back();
     }
 
@@ -62,10 +84,21 @@ class RateController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($product_id, $rate_id)
+    public function destroy(Request $request,$product_id, $rate_id)
     {
         $rate = Rate::where('rate_id', $rate_id)->first();
         $rate->delete();
+
+        // ログの作成
+        Log::create([
+            'log_type' => 3,
+            'log_table_type' => 4,
+            'log_ip_address' => $request->ip(),
+            'log_user_agent' => $request->header('User-Agent'),
+            'user_id' => Auth::id(),
+            'log_path' => $request->path(),
+        ]);
+        
         return redirect()->back();
     }
 }

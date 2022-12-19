@@ -4,15 +4,17 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 use App\Model\Review;
+use App\Model\Log;
 
 class ReviewController extends Controller
 {
-    // public function __construct()
-    // {
-    //     $this->middleware('auth:admin');
-    // }
+    public function __construct()
+    {
+        $this->middleware('auth:admin');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -65,10 +67,21 @@ class ReviewController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($review_id)
+    public function destroy(Request $request,$review_id)
     {
         $review = Review::find($review_id);
         $review->delete();
+
+        // ログの作成
+        Log::create([
+            'log_type' => 3,
+            'log_table_type' => 3,
+            'log_ip_address' => $request->ip(),
+            'log_user_agent' => $request->header('User-Agent'),
+            'user_id' => Auth::id(),
+            'log_path' => $request->path(),
+        ]);
+
         return redirect()->route('admin.review.index');
     }
 }

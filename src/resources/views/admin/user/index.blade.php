@@ -8,7 +8,7 @@
     <div>
         <form method="GET" action="{{ route('admin.user.index') }}">
             <p>ユーザー名で検索</p>
-            <input type="search" name="user_name" value="@if (isset($user_name)) {{ $user_name }} @endif">
+            <input type="search" name="user_name" value="@if(isset($user_name)){{ $user_name }}@endif">
             <button type="submit"><iconify-icon icon="ic:baseline-search"></iconify-icon></button>
         </form>
     </div>

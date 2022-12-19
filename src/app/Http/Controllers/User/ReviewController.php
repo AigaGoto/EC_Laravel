@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Model\User;
 use App\Model\Review;
 use App\Model\Tag;
+use App\Model\Log;
 use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
@@ -88,6 +89,16 @@ class ReviewController extends Controller
                 $tag->reviews()->attach($review->review_id);
             };
         }
+
+        // ログの作成
+        Log::create([
+            'log_type' => 2,
+            'log_table_type' => 3,
+            'log_ip_address' => $request->ip(),
+            'log_user_agent' => $request->header('User-Agent'),
+            'user_id' => Auth::id(),
+            'log_path' => $request->path(),
+        ]);
 
         return redirect()->route('user.review.index');
     }

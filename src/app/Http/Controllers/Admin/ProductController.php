@@ -5,9 +5,17 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Model\Product;
+use App\Model\Log;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth:admin');
+    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -66,6 +74,16 @@ class ProductController extends Controller
             'product_description' => $request->product_description,
         ]);
 
+        // ログの作成
+        Log::create([
+            'log_type' => 2,
+            'log_table_type' => 2,
+            'log_ip_address' => $request->ip(),
+            'log_user_agent' => $request->header('User-Agent'),
+            'user_id' => Auth::id(),
+            'log_path' => $request->path(),
+        ]);
+
         return redirect()->back();
     }
 
@@ -75,10 +93,21 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($product_id)
+    public function destroy(Request $request, $product_id)
     {
         $product = Product::findOrFail($product_id);
         $product->delete();
+
+        // ログの作成
+        Log::create([
+            'log_type' => 3,
+            'log_table_type' => 2,
+            'log_ip_address' => $request->ip(),
+            'log_user_agent' => $request->header('User-Agent'),
+            'user_id' => Auth::id(),
+            'log_path' => $request->path(),
+        ]);
+
         return redirect()->route('admin.product.index');
     }
 }

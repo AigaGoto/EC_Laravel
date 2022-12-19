@@ -8,7 +8,7 @@
     <div>
         <form method="GET" action="{{ route('admin.review.index') }}">
             <p>キーワードで検索</p>
-            <input type="search" name="keyword" value="@if (isset($keyword)) {{ $keyword }} @endif">
+            <input type="search" name="keyword" value="@if(isset($keyword)){{ $keyword }}@endif">
             <button type="submit"><iconify-icon icon="ic:baseline-search"></iconify-icon></button>
         </form>
     </div>
