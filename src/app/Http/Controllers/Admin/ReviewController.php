@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Model\Review;
 use App\Model\Log;
 
+use App\Consts\PaginateConst;
+
 class ReviewController extends Controller
 {
     public function __construct()
@@ -24,14 +26,11 @@ class ReviewController extends Controller
     {
         $keyword = $request->input('keyword');
 
-        $query = Review::query();
-
-        // キーワードが入力されているなら、検索する
-        if (!empty($keyword)) {
-            $query->where('review_content', 'LIKE', "%{$keyword}%");
-        }
-
-        $reviews = $query->paginate(5);
+        // レビューのキーワードが検索されているなら絞り込む
+        $reviews = Review::when($keyword, function ($query, $keyword) {
+            return $query->where('review_content', 'LIKE', "%{$keyword}%");
+        })
+        ->paginate(PaginateConst::NUM);
 
         // レビューに基づいたユーザーと商品のデータを紐付ける
         foreach ($reviews as $key => $value) {

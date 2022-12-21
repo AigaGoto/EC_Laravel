@@ -8,11 +8,11 @@
     <form method="GET" action="{{ route('admin.log') }}" >
         <p>操作名で検索</p>
 
-        <p><input type="checkbox" name="log_type[]" value="1">登録</p>
-        <p><input type="checkbox" name="log_type[]" value="2">更新</p>
-        <p><input type="checkbox" name="log_type[]" value="3">削除</p>
-        <p><input type="checkbox" name="log_type[]" value="4">ログイン</p>
-        <p><input type="checkbox" name="log_type[]" value="90">その他</p>
+        <p><input type="checkbox" name="log_type[]" value="1" @if(!empty($log_types) && in_array(1, $log_types)) {{"checked"}} @endif>登録</p>
+        <p><input type="checkbox" name="log_type[]" value="2" @if(!empty($log_types) && in_array(2, $log_types)) {{"checked"}} @endif>更新</p>
+        <p><input type="checkbox" name="log_type[]" value="3" @if(!empty($log_types) && in_array(3, $log_types)) {{"checked"}} @endif>削除</p>
+        <p><input type="checkbox" name="log_type[]" value="4" @if(!empty($log_types) && in_array(4, $log_types)) {{"checked"}} @endif>ログイン</p>
+        <p><input type="checkbox" name="log_type[]" value="90" @if(!empty($log_types) && in_array(90, $log_types)) {{"checked"}} @endif>その他</p>
 
         <button type="submit">
             <iconify-icon icon="ic:baseline-search"></iconify-icon>
@@ -45,7 +45,7 @@
             @endforeach
         </table>
 
-    {{ $logs->appends(['log_name' => $log_name ?? ''])->links() }}
+    {{ $logs->appends(['log_type' => $log_types ?? ''])->links() }}
     
     @if (count($logs) >0)
     <p>全{{ $logs->total() }}件中 

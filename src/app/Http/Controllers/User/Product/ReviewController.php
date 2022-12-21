@@ -9,6 +9,7 @@ use App\Model\Rate;
 use App\Model\Review;
 use App\Model\Tag;
 use App\Model\Log;
+use App\Consts\PaginateConst;
 use Illuminate\Support\Facades\Auth;
 use Session;
 
@@ -33,7 +34,7 @@ class ReviewController extends Controller
         $product['reviewCounts'] = $product->reviews->count();
 
         // レビュー部分のみ切り離す
-        $reviews = $product->reviews()->paginate(5);
+        $reviews = $product->reviews()->paginate(PaginateConst::NUM);
 
         return view('user.product.review.index', compact('product', 'reviews'));
     }

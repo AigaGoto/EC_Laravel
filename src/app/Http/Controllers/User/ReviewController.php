@@ -8,6 +8,7 @@ use App\Model\User;
 use App\Model\Review;
 use App\Model\Tag;
 use App\Model\Log;
+use App\Consts\PaginateConst;
 use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
@@ -24,7 +25,7 @@ class ReviewController extends Controller
     public function index()
     {
         $user = User::find(Auth::id());
-        $reviews = $user->reviews()->latest()->paginate(5);
+        $reviews = $user->reviews()->latest()->paginate(PaginateConst::NUM);
         foreach ($reviews as $key=>$review) {
             $diff_hours = now()->diffInHours($review->created_at);
             if($diff_hours <= 12) {

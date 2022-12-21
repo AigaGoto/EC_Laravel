@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Model\Order;
 use App\Model\Log;
 
+use App\Consts\PaginateConst;
+
 class UserController extends Controller
 {
     public function __construct()
@@ -16,7 +18,7 @@ class UserController extends Controller
     
     public function purchaseHistory()
     {
-        $orders = Order::with('product')->where('user_id', Auth::id())->paginate(5);
+        $orders = Order::with('product')->where('user_id', Auth::id())->paginate(PaginateConst::NUM);
 
         return view('user.purchaseHistory', compact('orders'));
     }
@@ -28,6 +30,14 @@ class UserController extends Controller
 
     public function profileUpdate(Request $request)
     {
+        $validatedData = $request->validate([
+            'user_email' => 'required|string|max:100|email|unique:users,user_email,'.Auth::id().',user_id',
+            'user_name' => 'required|string|max:20',
+            'user_birthday' => 'required|date',
+            'user_gender' => 'required|between:1,2',
+            'user_icon_image' => 'file|image',
+        ]);
+
         $root_path = 'public/sample/';
 
         $newImage = $request->file('user_icon_image');
@@ -36,6 +46,7 @@ class UserController extends Controller
         
         if(isset($newImage)) {
             \Storage::delete($root_path . $file_name);
+            $file_name = Auth::id() ."." . $newImage->getClientOriginalExtension();
             $path = $newImage->storeAs($root_path, $file_name);
         }
 

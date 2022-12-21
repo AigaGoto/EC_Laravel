@@ -5,6 +5,17 @@
 <div>
     <h1>商品情報の編集</h1>
 
+    {{-- バリデーションエラーの表示 --}}
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <form method="POST" action="{{ route('admin.product.update', $product->product_id) }}" enctype="multipart/form-data">
         @csrf
         

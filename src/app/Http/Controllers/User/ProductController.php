@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Model\Product;
 use App\Model\Rate;
+use App\Consts\PaginateConst;
 use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
@@ -21,7 +22,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with('rates', 'reviews')->paginate(5);
+        $products = Product::with('rates', 'reviews')->paginate(PaginateConst::NUM);
 
         // 商品に紐づいたレビュー数と評価数を取得
         foreach ($products as $key => $value) {

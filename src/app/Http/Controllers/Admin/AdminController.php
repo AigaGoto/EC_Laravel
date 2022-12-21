@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use App\Model\Admin;
 use App\Model\Log;
+use App\Consts\PaginateConst;
 
 class AdminController extends Controller
 {
@@ -23,14 +25,11 @@ class AdminController extends Controller
     {
         $admin_name = $request->input('admin_name');
 
-        $query = Admin::query();
-
-        // 管理者名が入力されているなら、検索する
-        if (!empty($admin_name)) {
-            $query->where('admin_name', 'LIKE', "%{$admin_name}%");
-        }
-
-        $admins = $query->paginate(5);
+        // 管理者名が検索されているなら絞り込む
+        $admins = Admin::when($admin_name, function ($query, $admin_name) {
+            return $query->where('admin_name', 'LIKE', "%{$admin_name}%");
+        })
+        ->paginate(PaginateConst::NUM);
 
         return view('admin.admin.index', compact('admins', 'admin_name'));
     }
@@ -62,7 +61,7 @@ class AdminController extends Controller
 
         Admin::create([
             'admin_email' => $request->admin_email,
-            'admin_password' => bcrypt($request->admin_password),
+            'admin_password' => Hash::make($request->admin_password),
             'admin_name' => $request->admin_name,
         ]);
 

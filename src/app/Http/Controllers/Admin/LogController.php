@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Model\Log;
+use App\Consts\PaginateConst;
 
 class LogController extends Controller
 {
@@ -15,17 +16,17 @@ class LogController extends Controller
     
     public function index(Request $request)
     {
-        $log_type = $request->input('log_type');
+        $log_types = $request->input('log_type');
 
-        $query = Log::query();
+        // 管理者名が検索されているなら絞り込む
+        $logs = Log::when($log_types, function ($query, $log_types) {
+            foreach($log_types as $log_type){
+                $query = $query->orWhere('log_type', $log_type);
+            }
+            return $query;
+        })
+        ->paginate(PaginateConst::NUM);
 
-        // 操作名がチェックされているなら、検索する
-        // if (!empty($log_type)) {
-        //     $query->where('log_type', 'LIKE', "%{$log_type}%");
-        // }
-
-        $logs = $query->paginate(5);
-
-        return view('admin.log', compact('logs'));
+        return view('admin.log', compact('logs', 'log_types'));
     }
 }

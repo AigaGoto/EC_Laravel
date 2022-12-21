@@ -228,6 +228,8 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
 
+        // 定数の追加
+        'Consts' => App\Consts\Consts::class,
     ],
 
 ];

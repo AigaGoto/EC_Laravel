@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Model\User;
+use App\Model\Log;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+use App\Consts\PaginateConst;
 
 class UserController extends Controller
 {
@@ -29,11 +32,12 @@ class UserController extends Controller
             $query->where('user_name', 'LIKE', "%{$user_name}%");
         }
 
-        $users = $query->paginate(5);
+        $users = $query->paginate(\Consts::PAGINATE_NUM);
 
         // レビューに基づいたユーザーと商品のデータを紐付ける
         foreach ($users as $key => $value) {
             $users[$key]['review_count'] = $users[$key]->reviews->count();
+            $users[$key]['user_age'] = Carbon::parse($users[$key]->user_birthday)->age;
         }
 
         return view('admin.user.index', compact('users', 'user_name'));
@@ -61,6 +65,14 @@ class UserController extends Controller
      */
     public function update(Request $request, $user_id)
     {
+        $validatedData = $request->validate([
+            'user_email' => 'required|string|max:100|email|unique:users,user_email,'.$user_id.',user_id',
+            'user_name' => 'required|string|max:20',
+            'user_birthday' => 'required|date',
+            'user_gender' => 'required|between:1,2',
+            'user_icon_image' => 'file|image',
+        ]);
+
         $user = User::findOrFail($user_id);
 
         $root_path = 'public/sample/';
@@ -71,6 +83,7 @@ class UserController extends Controller
         
         if(isset($newImage)) {
             \Storage::delete($root_path . $file_name);
+            $file_name = $user_id ."." . $newImage->getClientOriginalExtension();
             $path = $newImage->storeAs($root_path, $file_name);
         }
 

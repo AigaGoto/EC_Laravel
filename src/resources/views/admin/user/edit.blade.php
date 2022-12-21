@@ -5,6 +5,17 @@
 <div>
     <h1>ユーザー情報</h1>
 
+    {{-- バリデーションエラーの表示 --}}
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <form method="POST" action="{{ route('admin.user.update', $user->user_id) }}" enctype="multipart/form-data">
         @csrf
         

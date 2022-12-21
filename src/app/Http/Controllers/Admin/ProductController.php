@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Model\Product;
 use App\Model\Log;
 use Illuminate\Support\Facades\Auth;
+use App\Consts\PaginateConst;
 
 class ProductController extends Controller
 {
@@ -25,14 +26,11 @@ class ProductController extends Controller
     {
         $product_name = $request->input('product_name');
 
-        $query = Product::query();
-
-        // 商品名が入力されているなら、検索する
-        if (!empty($product_name)) {
-            $query->where('product_name', 'LIKE', "%{$product_name}%");
-        }
-
-        $products = $query->paginate(5);
+        // 商品名が検索されているなら絞り込む
+        $products = Product::when($product_name, function ($query, $product_name) {
+            return $query->where('product_name', 'LIKE', "%{$product_name}%");
+        })
+        ->paginate(PaginateConst::NUM);
 
         // レビューに基づいたユーザーと商品のデータを紐付ける
         foreach ($products as $key => $value) {
