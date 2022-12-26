@@ -56,7 +56,7 @@
         <a href="{{ route('user.review.index') }}">戻る</a>
         <input type="submit" value="レビューを確認">
     </form>
-    
+
 </div>
 
 <script>
@@ -67,7 +67,7 @@
 
     function addTag() {
         let tags = document.getElementById('tags');
-        
+
         let tagTextbox = document.getElementById('tagTextbox');
 
         // 空白文字を消す
@@ -98,7 +98,7 @@
         newDiv.appendChild(newTagName);
         newDiv.appendChild(newTagSubmit);
         newDiv.appendChild(deleteButton);
-        
+
         tags.appendChild(newDiv);
 
         // インプットの中身を削除
@@ -113,6 +113,6 @@
     window.addEventListener('DOMContentLoaded', () => {
         tagCount = document.getElementsByClassName('tag_input').length;
     })
-    
+
 </script>
 @endsection

@@ -5,18 +5,19 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Model\Product;
-use App\Model\Log;
 use Illuminate\Support\Facades\Auth;
-use App\Consts\PaginateConst;
+use Illuminate\Support\Facades\DB;
+use App\Services\CreateLogService;
 
 class ProductController extends Controller
 {
 
-    public function __construct()
+    public function __construct(CreateLogService $createLogService)
     {
         $this->middleware('auth:admin');
+        $this->createLogService = $createLogService;
     }
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -30,7 +31,7 @@ class ProductController extends Controller
         $products = Product::when($product_name, function ($query, $product_name) {
             return $query->where('product_name', 'LIKE', "%{$product_name}%");
         })
-        ->paginate(PaginateConst::NUM);
+        ->paginate(\Consts::PAGINATE_NUM);
 
         // レビューに基づいたユーザーと商品のデータを紐付ける
         foreach ($products as $key => $value) {
@@ -73,14 +74,7 @@ class ProductController extends Controller
         ]);
 
         // ログの作成
-        Log::create([
-            'log_type' => 2,
-            'log_table_type' => 2,
-            'log_ip_address' => $request->ip(),
-            'log_user_agent' => $request->header('User-Agent'),
-            'user_id' => Auth::id(),
-            'log_path' => $request->path(),
-        ]);
+        $this->createLogService->createLog(\Consts::LOG_UPDATE, \Consts::TABLE_PRODUCT, Auth::id(), $request);
 
         return redirect()->back();
     }
@@ -97,14 +91,7 @@ class ProductController extends Controller
         $product->delete();
 
         // ログの作成
-        Log::create([
-            'log_type' => 3,
-            'log_table_type' => 2,
-            'log_ip_address' => $request->ip(),
-            'log_user_agent' => $request->header('User-Agent'),
-            'user_id' => Auth::id(),
-            'log_path' => $request->path(),
-        ]);
+        $this->createLogService->createLog(\Consts::LOG_DELETE, \Consts::TABLE_PRODUCT, Auth::id(), $request);
 
         return redirect()->route('admin.product.index');
     }

@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Model\User;
-use App\Model\Log;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use App\Consts\PaginateConst;
+use Illuminate\Support\Facades\DB;
+use App\Services\CreateLogService;
 
 class UserController extends Controller
 {
@@ -63,7 +63,7 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $user_id)
+    public function update(Request $request, $user_id, CreateLogService $createLogService)
     {
         $validatedData = $request->validate([
             'user_email' => 'required|string|max:100|email|unique:users,user_email,'.$user_id.',user_id',
@@ -78,9 +78,9 @@ class UserController extends Controller
         $root_path = 'public/sample/';
 
         $newImage = $request->file('user_icon_image');
-        
+
         $file_name = $user->user_icon_image;
-        
+
         if(isset($newImage)) {
             \Storage::delete($root_path . $file_name);
             $file_name = $user_id ."." . $newImage->getClientOriginalExtension();
@@ -96,14 +96,7 @@ class UserController extends Controller
         ]);
 
         // ログの作成
-        Log::create([
-            'log_type' => 2,
-            'log_table_type' => 1,
-            'log_ip_address' => $request->ip(),
-            'log_user_agent' => $request->header('User-Agent'),
-            'user_id' => Auth::id(),
-            'log_path' => $request->path(),
-        ]);
+        $createLogService->createLog(\Consts::LOG_UPDATE, \Consts::TABLE_USER, Auth::id(), $request);
 
         return redirect()->back();
     }

@@ -17,7 +17,7 @@
                 <th>レビュー内容</th>
                 <th>投稿日</th>
             </tr>
-            
+
             @foreach($reviews as $review)
             <tr>
                 <td>{{ $review->review_id }}</td>

@@ -8,7 +8,7 @@
     </div>
     <div>
         <p>レビュー(合計{{$product->reviewCounts}}件)</p>
-        @foreach($reviews as $review) 
+        @foreach($reviews as $review)
             <img src="{{asset('storage/sample/' . $review->user->user_icon_image)}}" alt="{{$review->user->user_icon_image}}" width="100">
             <p>{{$review->user->user_name}}</p>
             <p>{{ $review->updated_at->format('Y/m/d H:i:s') }}</p>
@@ -20,13 +20,13 @@
         {{ $reviews->links() }}
 
         @if (count($reviews) >0)
-            <p>全{{ $reviews->total() }}件中 
-            {{  ($reviews->currentPage() -1) * $reviews->perPage() + 1}} - 
+            <p>全{{ $reviews->total() }}件中
+            {{  ($reviews->currentPage() -1) * $reviews->perPage() + 1}} -
             {{ (($reviews->currentPage() -1) * $reviews->perPage() + 1) + (count($reviews) -1)  }}件のデータが表示されています。</p>
         @else
             <p>データがありません。</p>
-        @endif 
+        @endif
     </div>
-    <a href="{{route('product.show', $product->product_id)}}">商品詳細ページはこちら</a>
+    <a href="{{route('user.product.show', $product->product_id)}}">商品詳細ページはこちら</a>
 </div>
 @endsection

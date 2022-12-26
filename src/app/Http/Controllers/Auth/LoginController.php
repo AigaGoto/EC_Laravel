@@ -8,8 +8,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
-use App\Model\Log;
+use App\Services\CreateLogService;
 
 class LoginController extends Controller
 {
@@ -48,31 +47,24 @@ class LoginController extends Controller
         return view('auth.login');
     }
 
-    
-    public function login(Request $request)
+
+    public function login(Request $request, CreateLogService $createLogService)
     {
         $this->validate($request, [
             'user_email'   => 'required',
             'user_password' => 'required|min:6'
         ]);
-        
+
         if (Auth::attempt(['user_email' => $request->user_email, 'password' => $request->user_password])) {
 
             //ログの作成
-            Log::create([
-                'log_type' => 4,
-                'log_table_type' => 1,
-                'log_ip_address' => $request->ip(),
-                'log_user_agent' => $request->header('User-Agent'),
-                'user_id' => Auth::id(),
-                'log_path' => $request->path(),
-            ]);
+            $createLogService->createLog(\Consts::LOG_LOGIN, \Consts::TABLE_USER, Auth::id(), $request);
 
             return redirect()->intended($this->redirectTo);
         }
         return redirect('/login');
     }
-    
+
     public function username()
     {
         return 'user_email';

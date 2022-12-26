@@ -8,10 +8,10 @@ use App\Model\Product;
 use App\Model\Rate;
 use App\Model\Review;
 use App\Model\Tag;
-use App\Model\Log;
-use App\Consts\PaginateConst;
 use Illuminate\Support\Facades\Auth;
-use Session;
+use Illuminate\Support\Facades\DB;
+use App\Services\CreateLogService;
+use App\Services\GetProductService;
 
 class ReviewController extends Controller
 {
@@ -19,7 +19,7 @@ class ReviewController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -34,7 +34,7 @@ class ReviewController extends Controller
         $product['reviewCounts'] = $product->reviews->count();
 
         // レビュー部分のみ切り離す
-        $reviews = $product->reviews()->paginate(PaginateConst::NUM);
+        $reviews = $product->reviews()->paginate(\Consts::PAGINATE_NUM);
 
         return view('user.product.review.index', compact('product', 'reviews'));
     }
@@ -45,15 +45,16 @@ class ReviewController extends Controller
      * @return \Illuminate\Http\Response
      *
      */
-    public function create($product_id)
+    public function create($product_id, GetProductService $getProductService)
     {
-        // 商品がない場合には404を表示させる
-        $product = Product::with('rates')->findOrFail($product_id);
+        // 認証中のユーザーがレビューしているかを取得
+        $login_user_review = Review::where('product_id', $product_id)->where('user_id', Auth::id())->first();
+        if($login_user_review) {
+            $error = "同じ商品には、1つしかレビューができません";
+            return redirect()->route('user.product.show', $product_id)->with(compact('error'));
+        }
 
-        // 商品に紐づいたレビュー数と評価数を取得
-        $product['highrateCounts'] = $product->rates->where('rate_type', '=', '1')->count();
-        $product['lowrateCounts'] = $product->rates->where('rate_type', '=', '2')->count();
-        $product['reviewCounts'] = $product->reviews->count();
+        $product = $getProductService->getProduct($product_id);
 
         // 認証中のユーザーが評価しているかを取得
         $rate = Rate::where('product_id', $product_id)->where('user_id', Auth::id())->first();
@@ -67,11 +68,11 @@ class ReviewController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store($product_id, Request $request)
+    public function store($product_id, Request $request, CreateLogService $createLogService)
     {
         if ($request->input('back') == '戻る') {
             return redirect()
-                ->route('review.create', ['product_id' => $product_id])
+                ->route('user.product.review.create', ['product_id' => $product_id])
                 ->withInput();
         };
 
@@ -86,28 +87,21 @@ class ReviewController extends Controller
             'product_id' => $product_id,
             'user_id' => Auth::id(),
         ]);
-        
+
         if ($request->tags != null) {
             foreach ($request->tags as $tag_name) {
                 $tag = Tag::firstOrCreate([
                     'tag_name' => $tag_name
                 ]);
-                
+
                 $tag->reviews()->attach($review->review_id);
             };
         }
 
         // ログの作成
-        Log::create([
-            'log_type' => 1,
-            'log_table_type' => 3,
-            'log_ip_address' => $request->ip(),
-            'log_user_agent' => $request->header('User-Agent'),
-            'user_id' => Auth::id(),
-            'log_path' => $request->path(),
-        ]);
+        $createLogService->createLog(\Consts::LOG_REGISTER, \Consts::TABLE_REVIEW, Auth::id(), $request);
 
-        return redirect()->route('review.index', ['product_id' => $product_id]);
+        return redirect()->route('user.product.review.index', ['product_id' => $product_id]);
     }
 
     public function confirm($product_id, Request $request)

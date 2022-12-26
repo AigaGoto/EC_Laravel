@@ -8,7 +8,7 @@
     <p>{{ $product->product_name }}</p>
 
     <p>------------------------</p>
-    
+
     <img src="{{asset('storage/sample/' . $user->user_icon_image)}}" alt="{{$user->user_icon_image}}" width="100">
     <p>{{ $user->user_name }}</p>
     <p>{{ $review->created_at }}</p>

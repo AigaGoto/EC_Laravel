@@ -71,13 +71,11 @@ class RegisterController extends Controller
         $latest_user_id = User::latest('user_id')->first()->user_id;
         // extension拡張子を取得する
         $extension = $data['user_icon_image']->extension();
-        
+
         // ユーザーIDの一番後ろ + 1 でfile_nameを設定する
         $file_name = ($latest_user_id+1) . '.'. $extension;
 
         $data['user_icon_image']->storeAs('public/' . $dir, $file_name);
-
-        // dd($data['user_icon_image']);
 
         return User::create([
             'user_name' => $data['user_name'],

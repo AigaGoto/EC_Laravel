@@ -7,8 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Model\Admin;
-use App\Model\Log;
-use App\Consts\PaginateConst;
+use Illuminate\Support\Facades\DB;
+
+use App\Services\CreateLogService;
 
 class AdminController extends Controller
 {
@@ -29,7 +30,7 @@ class AdminController extends Controller
         $admins = Admin::when($admin_name, function ($query, $admin_name) {
             return $query->where('admin_name', 'LIKE', "%{$admin_name}%");
         })
-        ->paginate(PaginateConst::NUM);
+        ->paginate(\Consts::PAGINATE_NUM);
 
         return view('admin.admin.index', compact('admins', 'admin_name'));
     }
@@ -50,7 +51,7 @@ class AdminController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, CreateLogService $createLogService)
     {
         $validatedData = $request->validate([
             'admin_email' => 'required|string|max:100|email|unique:admins',
@@ -66,14 +67,7 @@ class AdminController extends Controller
         ]);
 
         // ログの作成
-        Log::create([
-            'log_type' => 1,
-            'log_table_type' => 6,
-            'log_ip_address' => $request->ip(),
-            'log_user_agent' => $request->header('User-Agent'),
-            'user_id' => Auth::id(),
-            'log_path' => $request->path(),
-        ]);
+        $createLogService->createLog(\Consts::LOG_REGISTER, \Consts::TABLE_ADMIN, Auth::id(), $request);
 
         return redirect()->route('admin.admin.index');
     }

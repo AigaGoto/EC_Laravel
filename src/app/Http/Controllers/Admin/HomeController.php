@@ -1,11 +1,11 @@
 <?php
- 
-namespace App\Http\Controllers\Admin; 
- 
+
+namespace App\Http\Controllers\Admin;
+
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Review;
- 
+
 class HomeController extends Controller
 {
     /**
@@ -17,7 +17,7 @@ class HomeController extends Controller
     {
         $this->middleware('auth:admin');
     }
- 
+
     /**
      * Show the application dashboard.
      *
@@ -34,7 +34,7 @@ class HomeController extends Controller
             $reviews[$key]['product_id'] = $reviews[$key]->product->product_id;
             $reviews[$key]['product_name'] = $reviews[$key]->product->product_name;
         }
-        
+
         return view('admin.home', compact('reviews'));
     }
 }

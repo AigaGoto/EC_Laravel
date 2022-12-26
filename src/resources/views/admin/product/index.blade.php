@@ -4,9 +4,10 @@
 @include('layouts.adminSidebar')
 <div>
     <h1>商品一覧</h1>
-    
+
     <div>
         <form method="GET" action="{{ route('admin.product.index') }}">
+            @csrf
             <p>商品名で検索</p>
             <input type="search" name="product_name" value="@if(isset($product_name)){{ $product_name }}@endif">
             <button type="submit"><iconify-icon icon="ic:baseline-search"></iconify-icon></button>
@@ -24,7 +25,7 @@
                 <th>高評価数</th>
                 <th>低評価数</th>
             </tr>
-            
+
             @foreach($products as $product)
             <tr>
                 <td>{{ $product->product_id }}</td>
@@ -41,14 +42,14 @@
         </table>
 
     {{ $products->appends(['product_name' => $product_name ?? ''])->links() }}
-    
+
     @if (count($products) >0)
-    <p>全{{ $products->total() }}件中 
-        {{  ($products->currentPage() -1) * $products->perPage() + 1}} - 
+    <p>全{{ $products->total() }}件中
+        {{  ($products->currentPage() -1) * $products->perPage() + 1}} -
         {{ (($products->currentPage() -1) * $products->perPage() + 1) + (count($products) -1)  }}件のデータが表示されています。</p>
         @else
         <p>データがありません。</p>
-        @endif 
+        @endif
     </div>
 </div>
 @endsection

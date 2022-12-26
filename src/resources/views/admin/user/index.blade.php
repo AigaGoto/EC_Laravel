@@ -4,7 +4,7 @@
 @include('layouts.adminSidebar')
 <div>
     <h1>ユーザー一覧</h1>
-    
+
     <div>
         <form method="GET" action="{{ route('admin.user.index') }}">
             <p>ユーザー名で検索</p>
@@ -24,7 +24,7 @@
                 <th>登録日</th>
                 <th>レビューした数</th>
             </tr>
-            
+
             @foreach($users as $user)
             <tr>
                 <td>
@@ -34,7 +34,10 @@
                 <td>{{ $user->user_name }}</td>
                 <td>{{ $user->user_age }}</td>
                 <td>{{ $user->user_email }}</td>
-                <td> @if($user->user_gender==1) 男 @else 女 @endif </td>
+                <td> @if($user->user_gender==Consts::GENDER_MALE) {{Consts::GENDER_LIST[Consts::GENDER_MALE]}} 
+                    @else {{Consts::GENDER_LIST[Consts::GENDER_FEMALE]}} 
+                    @endif
+                </td>
                 <td>{{ $user->created_at }}</td>
                 <td>{{ $user->review_count }}</td>
                 <td><a href="{{route('admin.user.edit', $user->user_id)}}">編集</a></td>
@@ -43,14 +46,14 @@
         </table>
 
     {{ $users->appends(['user_name' => $user_name ?? ''])->links() }}
-    
+
     @if (count($users) >0)
-    <p>全{{ $users->total() }}件中 
-        {{  ($users->currentPage() -1) * $users->perPage() + 1}} - 
+    <p>全{{ $users->total() }}件中
+        {{  ($users->currentPage() -1) * $users->perPage() + 1}} -
         {{ (($users->currentPage() -1) * $users->perPage() + 1) + (count($users) -1)  }}件のデータが表示されています。</p>
         @else
         <p>データがありません。</p>
-        @endif 
+        @endif
     </div>
 </div>
 @endsection

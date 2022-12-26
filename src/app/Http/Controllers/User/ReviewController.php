@@ -7,9 +7,9 @@ use Illuminate\Http\Request;
 use App\Model\User;
 use App\Model\Review;
 use App\Model\Tag;
-use App\Model\Log;
-use App\Consts\PaginateConst;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use App\Services\CreateLogService;
 
 class ReviewController extends Controller
 {
@@ -25,7 +25,7 @@ class ReviewController extends Controller
     public function index()
     {
         $user = User::find(Auth::id());
-        $reviews = $user->reviews()->latest()->paginate(PaginateConst::NUM);
+        $reviews = $user->reviews()->latest()->paginate(\Consts::PAGINATE_NUM);
         foreach ($reviews as $key=>$review) {
             $diff_hours = now()->diffInHours($review->created_at);
             if($diff_hours <= 12) {
@@ -41,7 +41,7 @@ class ReviewController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($review_id)
+    public function edit($review_id, Request $request)
     {
         $review = Review::with('product', 'tags')->findOrFail($review_id);
         if (now()->diffInHours($review->created_at) > 12) {
@@ -49,10 +49,15 @@ class ReviewController extends Controller
         }
         $product = $review->product;
         $tags = $review->tags;
+
+        // 確認画面で戻るボタンを押した時
+        if (old('back')) {
+            $tags = null;
+        };
         return view('user.review.edit', compact('review', 'product', 'tags'));
     }
-    
-    public function update($review_id, Request $request)
+
+    public function update($review_id, Request $request, CreateLogService $createLogService)
     {
         // 戻るボタンが押されたら、編集画面に戻す
         if ($request->input('back') == '戻る') {
@@ -79,27 +84,20 @@ class ReviewController extends Controller
                 $tag->reviews()->detach($review->review_id);
             }
         }
-        
+
         // 新しいタグをレビューにつける
         if ($request->tags != null) {
             foreach ($request->tags as $tag_name) {
                 $tag = Tag::firstOrCreate([
                     'tag_name' => $tag_name
                 ]);
-                
+
                 $tag->reviews()->attach($review->review_id);
             };
         }
 
         // ログの作成
-        Log::create([
-            'log_type' => 2,
-            'log_table_type' => 3,
-            'log_ip_address' => $request->ip(),
-            'log_user_agent' => $request->header('User-Agent'),
-            'user_id' => Auth::id(),
-            'log_path' => $request->path(),
-        ]);
+        $createLogService->createLog(\Consts::LOG_UPDATE, \Consts::TABLE_REVIEW, Auth::id(), $request);
 
         return redirect()->route('user.review.index');
     }

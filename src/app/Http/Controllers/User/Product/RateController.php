@@ -6,13 +6,15 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Model\Rate;
-use App\Model\Log;
+use Illuminate\Support\Facades\DB;
+use App\Services\CreateLogService;
 
 class RateController extends Controller
 {
-    public function __construct()
+    public function __construct(CreateLogService $createLogService)
     {
         $this->middleware('auth');
+        $this->createLogService = $createLogService;
     }
 
 
@@ -35,14 +37,7 @@ class RateController extends Controller
         ]);
 
         // ログの作成
-        Log::create([
-            'log_type' => 1,
-            'log_table_type' => 4,
-            'log_ip_address' => $request->ip(),
-            'log_user_agent' => $request->header('User-Agent'),
-            'user_id' => Auth::id(),
-            'log_path' => $request->path(),
-        ]);
+        $this->createLogService->createLog(\Consts::LOG_REGISTER, \Consts::TABLE_RATE, Auth::id(), $request);
 
         return redirect()->back();
     }
@@ -66,14 +61,7 @@ class RateController extends Controller
             ]));
 
         // ログの作成
-        Log::create([
-            'log_type' => 2,
-            'log_table_type' => 4,
-            'log_ip_address' => $request->ip(),
-            'log_user_agent' => $request->header('User-Agent'),
-            'user_id' => Auth::id(),
-            'log_path' => $request->path(),
-        ]);
+        $this->createLogService->createLog(\Consts::LOG_UPDATE, \Consts::TABLE_RATE, Auth::id(), $request);
 
         return redirect()->back();
     }
@@ -90,15 +78,8 @@ class RateController extends Controller
         $rate->delete();
 
         // ログの作成
-        Log::create([
-            'log_type' => 3,
-            'log_table_type' => 4,
-            'log_ip_address' => $request->ip(),
-            'log_user_agent' => $request->header('User-Agent'),
-            'user_id' => Auth::id(),
-            'log_path' => $request->path(),
-        ]);
-        
+        $this->createLogService->createLog(\Consts::LOG_DELETE, \Consts::TABLE_RATE, Auth::id(), $request);
+
         return redirect()->back();
     }
 }

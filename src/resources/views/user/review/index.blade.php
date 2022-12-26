@@ -19,11 +19,11 @@
     {{ $reviews->links() }}
 
     @if (count($reviews) >0)
-        <p>全{{ $reviews->total() }}件中 
-        {{  ($reviews->currentPage() -1) * $reviews->perPage() + 1}} - 
+        <p>全{{ $reviews->total() }}件中
+        {{  ($reviews->currentPage() -1) * $reviews->perPage() + 1}} -
         {{ (($reviews->currentPage() -1) * $reviews->perPage() + 1) + (count($reviews) -1)  }}件のデータが表示されています。</p>
     @else
         <p>データがありません。</p>
-    @endif 
+    @endif
 </div>
 @endsection

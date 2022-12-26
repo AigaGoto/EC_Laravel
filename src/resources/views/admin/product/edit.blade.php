@@ -18,7 +18,7 @@
 
     <form method="POST" action="{{ route('admin.product.update', $product->product_id) }}" enctype="multipart/form-data">
         @csrf
-        
+
         <input type="hidden" name="_method" value="PUT">
 
         <label for="product_image_file" >{{ __('商品画像') }}</label>
@@ -78,6 +78,6 @@
         <input type="hidden" name="_method" value="DELETE">
         <input type="submit" value="この商品を削除する">
     </form>
-    
+
 </div>
 @endsection

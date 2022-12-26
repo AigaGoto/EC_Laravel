@@ -18,7 +18,7 @@
 
     <form method="POST" action="{{ route('admin.user.update', $user->user_id) }}" enctype="multipart/form-data">
         @csrf
-        
+
         <input type="hidden" name="_method" value="PUT">
 
         <label for="user_icon_image" >{{ __('アイコン画像') }}</label>
@@ -72,10 +72,10 @@
         <label for="user_gender" >{{ __('性別') }}</label>
 
         <div>
-            <input id="user_gender1" type="radio"  value="1"  name="user_gender" @if ($user->user_gender == 1) {{"checked"}} @endif>
-            <label for="user_gender1" class="form-check-label">男</label>
-            <input id="user_gender2" type="radio" value="2"  name="user_gender"  @if ($user->user_gender == 2) {{"checked"}} @endif>
-            <label for="user_gender1" class="form-check-label">女</label>
+            @foreach(Consts::GENDER_LIST as $key => $value)
+                <input id="user_gender_{{$key}}" type="radio"  value="{{ $key }}"  name="user_gender" @if ($user->user_gender == $key) {{"checked"}} @endif>
+                <label for="user_gender_{{$key}}" class="form-check-label">{{ $value }}</label>
+            @endforeach
 
             @error('user_gender')
                 <span class="invalid-feedback" role="alert">
@@ -87,6 +87,6 @@
         <a href="{{route('admin.user.index')}}">戻る</a>
         <input type="submit" value="更新">
     </form>
-    
+
 </div>
 @endsection

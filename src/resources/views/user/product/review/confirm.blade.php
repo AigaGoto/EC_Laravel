@@ -7,8 +7,8 @@
     <p>{{ $product->product_name }}</p>
 
     <p>------------------------</p>
-    
-    <form method="POST" action="{{ route('review.store', $product->product_id) }}">
+
+    <form method="POST" action="{{ route('user.product.review.store', $product->product_id) }}">
         @csrf
         <h1>プレビュー</h1>
         <img src="{{asset('storage/sample/' . Auth::user()->user_icon_image)}}" alt="{{Auth::user()->user_icon_image}}" width="100">

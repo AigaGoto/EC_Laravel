@@ -7,7 +7,7 @@
     <p>{{ $product->product_name }}</p>
 
     <p>------------------------</p>
-    
+
     <form method="POST" action="{{ route('user.review.update', $review->review_id) }}">
         @csrf
         <input type="hidden" name="_method" value="PUT">

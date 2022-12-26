@@ -5,11 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\DB;
 use App\Model\Review;
-use App\Model\Log;
-
-use App\Consts\PaginateConst;
+use App\Services\CreateLogService;
 
 class ReviewController extends Controller
 {
@@ -30,7 +28,7 @@ class ReviewController extends Controller
         $reviews = Review::when($keyword, function ($query, $keyword) {
             return $query->where('review_content', 'LIKE', "%{$keyword}%");
         })
-        ->paginate(PaginateConst::NUM);
+        ->paginate(\Consts::PAGINATE_NUM);
 
         // レビューに基づいたユーザーと商品のデータを紐付ける
         foreach ($reviews as $key => $value) {
@@ -66,20 +64,13 @@ class ReviewController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request,$review_id)
+    public function destroy(Request $request,$review_id, CreateLogService $createLogService)
     {
         $review = Review::find($review_id);
         $review->delete();
 
         // ログの作成
-        Log::create([
-            'log_type' => 3,
-            'log_table_type' => 3,
-            'log_ip_address' => $request->ip(),
-            'log_user_agent' => $request->header('User-Agent'),
-            'user_id' => Auth::id(),
-            'log_path' => $request->path(),
-        ]);
+        $createLogService->createLog(\Consts::LOG_DELETE, \Consts::TABLE_REVIEW, Auth::id(), $request);
 
         return redirect()->route('admin.review.index');
     }

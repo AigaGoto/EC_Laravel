@@ -8,7 +8,7 @@
                 <div class="card-header">{{ __('新規登録') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route('user.register') }}" enctype="multipart/form-data">
                         @csrf
 
                         <div class="form-group row">
@@ -81,10 +81,10 @@
                             <label for="user_gender" class="col-md-4 col-form-label text-md-right">{{ __('性別') }}</label>
 
                             <div class="col-md-6">
-                                <input id="user_gender1" type="radio" class="form-control @error('user_gender') is-invalid @enderror" value="1" {{ old ('release') == '1' ? 'checked' : '' }} name="user_gender" checked>
-                                <label for="user_gender1" class="form-check-label">男</label>
-                                <input id="user_gender2" type="radio" class="form-control @error('user_gender') is-invalid @enderror" value="2" {{ old ('release') == '2' ? 'checked' : '' }} name="user_gender"  >
-                                <label for="user_gender1" class="form-check-label">女</label>
+                                @foreach(Consts::GENDER_LIST as $key => $value)
+                                    <input id="user_gender_{{$key}}" type="radio" class="form-control @error('user_gender') is-invalid @enderror"  value="{{ $key }}"  name="user_gender" {{ old ('release') == Consts::GENDER_MALE ? 'checked' : '' }} @if ($key == Consts::GENDER_MALE) {{"checked"}} @endif>
+                                    <label for="user_gender_{{$key}}" class="form-check-label">{{$value}}</label>
+                                @endforeach
 
                                 @error('user_gender')
                                     <span class="invalid-feedback" role="alert">

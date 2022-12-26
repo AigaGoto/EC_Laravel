@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Model\Product;
 use App\Model\Rate;
-use App\Consts\PaginateConst;
+use App\Model\Review;
+use App\Services\GetProductService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -22,14 +24,15 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with('rates', 'reviews')->paginate(PaginateConst::NUM);
+        $products = Product::with('rates', 'reviews')->paginate(\Consts::PAGINATE_NUM);
 
         // 商品に紐づいたレビュー数と評価数を取得
         foreach ($products as $key => $value) {
-            $products[$key]['highrateCounts'] = $products[$key]->rates->where('rate_type', '=', '1')->count();
-            $products[$key]['lowrateCounts'] = $products[$key]->rates->where('rate_type', '=', '2')->count();
+            $products[$key]['highrateCounts'] = $products[$key]->rates->where('rate_type', '=', \Consts::RATE_HIGH)->count();
+            $products[$key]['lowrateCounts'] = $products[$key]->rates->where('rate_type', '=', \Consts::RATE_LOW)->count();
             $products[$key]['reviewCounts'] = $products[$key]->reviews->count();
         }
+
 
         return view('user.product.index', compact('products'));
     }
@@ -40,15 +43,9 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($product_id)
+    public function show($product_id, GetProductService $getProductService)
     {
-        // 商品がない場合には404を表示させる
-        $product = Product::with('rates', 'reviews.user', 'reviews.tags')->findOrFail($product_id);
-
-        // 商品に紐づいたレビュー数と評価数を取得
-        $product['highrateCounts'] = $product->rates->where('rate_type', '=', '1')->count();
-        $product['lowrateCounts'] = $product->rates->where('rate_type', '=', '2')->count();
-        $product['reviewCounts'] = $product->reviews->count();
+        $product = $getProductService->getProduct($product_id);
 
         // レビュー部分を3件取得
         $reviews = $product->reviews->take(3);
@@ -56,7 +53,10 @@ class ProductController extends Controller
         // 認証中のユーザーが評価しているかを取得
         $rate = Rate::where('product_id', $product_id)->where('user_id', Auth::id())->first();
 
-        return view('user.product.show', compact('product', 'reviews', 'rate'));
+        // 認証中のユーザーがレビューしているかを取得
+        $login_user_review = Review::where('product_id', $product_id)->where('user_id', Auth::id())->first();
+
+        return view('user.product.show', compact('product', 'reviews', 'rate', 'login_user_review'));
     }
 
 }

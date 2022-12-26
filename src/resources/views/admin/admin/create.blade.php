@@ -27,12 +27,12 @@
             <label for="admin_password">パスワード</label>
             <input type="password" name="admin_password" value="{{ old('admin_password') }}">
         </div>
-            
+
         <div>
             <label for="admin_password_confirmation">パスワード確認用</label>
             <input type="password" name="admin_password_confirmation" value="{{ old('admin_password') }}">
         </div>
-            
+
         <div>
             <label for="admin_name">管理者名</label>
             <input type="text" name="admin_name" value="{{ old('admin_name') }}">
