@@ -76,8 +76,18 @@
     <form method="POST" action="{{route('admin.product.destroy', $product->product_id)}}">
         @csrf
         <input type="hidden" name="_method" value="DELETE">
-        <input type="submit" value="この商品を削除する">
+        <input type="submit" value="この商品を削除する" onClick="delete_alert(event); return false;">
     </form>
 
 </div>
+
+<script>
+    function delete_alert(e){
+        if(!window.confirm('本当に削除しますか？')){
+            return false;
+        }
+        document.deleteform.submit();
+    };
+</script>
+
 @endsection

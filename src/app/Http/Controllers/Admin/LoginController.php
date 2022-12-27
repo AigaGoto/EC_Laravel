@@ -48,14 +48,21 @@ class LoginController extends Controller
 
         if (Auth::guard('admin')->attempt(['admin_email' => $request->admin_email, 'password' => $request->admin_password])) {
 
-            // ログの作成
-            $createLogService->createLog(\Consts::LOG_LOGIN, \Consts::TABLE_ADMIN, Auth::guard('admin')->id(), $request);
+            DB::beginTransaction();
+            try {
+                // ログの作成
+                $createLogService->createLog(\Consts::LOG_LOGIN, \Consts::TABLE_ADMIN, Auth::guard('admin')->id(), $request);
+
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollback();
+            }
 
             return redirect()->intended($this->redirectTo);
         }
 
 
-        return redirect('/admin/login');
+        return $this->sendFailedLoginResponse($request);
     }
 
     public function username()

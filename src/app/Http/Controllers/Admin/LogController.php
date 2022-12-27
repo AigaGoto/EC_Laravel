@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Model\Log;
-use Illuminate\Support\Facades\DB;
 
 class LogController extends Controller
 {
@@ -23,7 +22,7 @@ class LogController extends Controller
             $query = $query->whereIn('log_type', $log_types);
             return $query;
         })
-        ->paginate(\Consts::PAGINATE_NUM);
+        ->latest()->paginate(\Consts::PAGINATE_NUM);
 
         return view('admin.log', compact('logs', 'log_types'));
     }

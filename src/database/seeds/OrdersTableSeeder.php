@@ -11,7 +11,7 @@ class OrdersTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Model\Order::class, 2) //Postモデルを参照して尚且つ50個のダミーデータを作成
+        factory(App\Model\Order::class, 10) //Postモデルを参照して尚且つ10個のダミーデータを作成
             ->create();
     }
 }

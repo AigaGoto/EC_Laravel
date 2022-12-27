@@ -20,8 +20,3 @@ return [
     'throttle' => 'ログイン試行回数が制限に達しました。 :seconds 秒以上開けて再度お試しください',
 
 ];
-Footer
-© 2022 GitHub, Inc.
-Footer navigation
-Terms
-Privacy

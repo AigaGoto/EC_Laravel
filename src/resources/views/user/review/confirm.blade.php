@@ -12,7 +12,7 @@
         @csrf
         <input type="hidden" name="_method" value="PUT">
         <h1>プレビュー</h1>
-        <img src="{{asset('storage/sample/' . Auth::user()->user_icon_image)}}" alt="{{Auth::user()->user_icon_image}}" width="100">
+        @include('layouts.userIcon', ['user_icon_image'=>Auth::user()->user_icon_image])
         <p>{{ Auth::user()->user_name }}</p>
         <p>{{ now()->format('Y/m/d H:i:s') }}</p>
         @if ($tags != null)

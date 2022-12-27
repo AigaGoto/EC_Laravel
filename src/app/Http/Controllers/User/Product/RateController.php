@@ -30,14 +30,22 @@ class RateController extends Controller
             'rate_type' => 'required|between:1,2',
         ]);
 
-        Rate::create([
-            'rate_type' => $request->rate_type,
-            'user_id' => Auth::id(),
-            'product_id' => $product_id,
-        ]);
+        DB::beginTransaction();
+        try {
+            Rate::create([
+                'rate_type' => $request->rate_type,
+                'user_id' => Auth::id(),
+                'product_id' => $product_id,
+            ]);
 
-        // ログの作成
-        $this->createLogService->createLog(\Consts::LOG_REGISTER, \Consts::TABLE_RATE, Auth::id(), $request);
+            // ログの作成
+            $this->createLogService->createLog(\Consts::LOG_REGISTER, \Consts::TABLE_RATE, Auth::id(), $request);
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+        }
+
 
         return redirect()->back();
     }
@@ -55,13 +63,21 @@ class RateController extends Controller
             'rate_type' => 'required|between:1,2',
         ]);
 
-        Rate::where('rate_id', $rate_id)
-            ->update(([
-                'rate_type' => $request->rate_type,
-            ]));
+        DB::beginTransaction();
+        try {
+            Rate::where('rate_id', $rate_id)
+                ->update(([
+                    'rate_type' => $request->rate_type,
+                ]));
 
-        // ログの作成
-        $this->createLogService->createLog(\Consts::LOG_UPDATE, \Consts::TABLE_RATE, Auth::id(), $request);
+            // ログの作成
+            $this->createLogService->createLog(\Consts::LOG_UPDATE, \Consts::TABLE_RATE, Auth::id(), $request);
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+        }
+
 
         return redirect()->back();
     }
@@ -75,10 +91,19 @@ class RateController extends Controller
     public function destroy(Request $request,$product_id, $rate_id)
     {
         $rate = Rate::where('rate_id', $rate_id)->first();
-        $rate->delete();
 
-        // ログの作成
-        $this->createLogService->createLog(\Consts::LOG_DELETE, \Consts::TABLE_RATE, Auth::id(), $request);
+        DB::beginTransaction();
+        try {
+            $rate->delete();
+
+            // ログの作成
+            $this->createLogService->createLog(\Consts::LOG_DELETE, \Consts::TABLE_RATE, Auth::id(), $request);
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+        }
+
 
         return redirect()->back();
     }

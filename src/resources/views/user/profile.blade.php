@@ -11,7 +11,7 @@
         <input type="hidden" name="_method" value="PUT">
 
         <label for="user_icon_image" >{{ __('アイコン画像') }}</label>
-        <img src="{{asset('storage/sample/' . Auth::user()->user_icon_image)}}" alt="{{Auth::user()->user_icon_image}}" width="100">
+        @include('layouts.userIcon', ['user_icon_image'=>Auth::user()->user_icon_image])
         <div>
             <input id="user_icon_image" type="file" name="user_icon_image" value="{{ Auth::user()->user_icon_image }}">
 

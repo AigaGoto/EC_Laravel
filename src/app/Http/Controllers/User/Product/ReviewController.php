@@ -28,13 +28,13 @@ class ReviewController extends Controller
     public function index($product_id)
     {
         // 商品がない場合には404を表示させる
-        $product = Product::with('rates', 'reviews.user', 'reviews.tags')->findOrFail($product_id);
+        $product = Product::with('reviews')->findOrFail($product_id);
 
         // 商品に紐づいたレビュー数を取得
         $product['reviewCounts'] = $product->reviews->count();
 
-        // レビュー部分のみ切り離す
-        $reviews = $product->reviews()->paginate(\Consts::PAGINATE_NUM);
+        // レビュー部分
+        $reviews = Review::with('tags', 'user')->where('product_id', $product_id)->paginate(\Consts::PAGINATE_NUM);
 
         return view('user.product.review.index', compact('product', 'reviews'));
     }
@@ -50,8 +50,10 @@ class ReviewController extends Controller
         // 認証中のユーザーがレビューしているかを取得
         $login_user_review = Review::where('product_id', $product_id)->where('user_id', Auth::id())->first();
         if($login_user_review) {
-            $error = "同じ商品には、1つしかレビューができません";
-            return redirect()->route('user.product.show', $product_id)->with(compact('error'));
+            // $error = "同じ商品には、1つしかレビューができません";
+            // dd(\Lang::get("messages"));
+            return redirect()->route('user.product.show', $product_id)
+                    ->with(\Lang::get("messages"));
         }
 
         $product = $getProductService->getProduct($product_id);
@@ -82,24 +84,31 @@ class ReviewController extends Controller
             'review_content' => 'required',
         ]);
 
-        $review = Review::create([
-            'review_content' => $request->review_content,
-            'product_id' => $product_id,
-            'user_id' => Auth::id(),
-        ]);
+        DB::beginTransaction();
+        try {
+            $review = Review::create([
+                'review_content' => $request->review_content,
+                'product_id' => $product_id,
+                'user_id' => Auth::id(),
+            ]);
 
-        if ($request->tags != null) {
-            foreach ($request->tags as $tag_name) {
-                $tag = Tag::firstOrCreate([
-                    'tag_name' => $tag_name
-                ]);
+            if ($request->tags != null) {
+                foreach ($request->tags as $tag_name) {
+                    $tag = Tag::firstOrCreate([
+                        'tag_name' => $tag_name
+                    ]);
 
-                $tag->reviews()->attach($review->review_id);
-            };
+                    $tag->reviews()->attach($review->review_id);
+                };
+            }
+
+            // ログの作成
+            $createLogService->createLog(\Consts::LOG_REGISTER, \Consts::TABLE_REVIEW, Auth::id(), $request);
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
         }
-
-        // ログの作成
-        $createLogService->createLog(\Consts::LOG_REGISTER, \Consts::TABLE_REVIEW, Auth::id(), $request);
 
         return redirect()->route('user.product.review.index', ['product_id' => $product_id]);
     }

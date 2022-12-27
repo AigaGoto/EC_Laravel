@@ -25,7 +25,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $reviews = Review::orderBy('created_at', 'DESC')->take(5)->get();
+        $reviews = Review::with('user', 'product')->orderBy('created_at', 'DESC')->take(5)->get();
 
         // レビューに基づいたユーザーと商品のデータを紐付ける
         foreach ($reviews as $key => $value) {

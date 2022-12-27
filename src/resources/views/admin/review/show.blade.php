@@ -9,7 +9,7 @@
 
     <p>------------------------</p>
 
-    <img src="{{asset('storage/sample/' . $user->user_icon_image)}}" alt="{{$user->user_icon_image}}" width="100">
+    @include('layouts.userIcon', ['user_icon_image'=>$user->user_icon_image])
     <p>{{ $user->user_name }}</p>
     <p>{{ $review->created_at }}</p>
     @if ($tags != null)

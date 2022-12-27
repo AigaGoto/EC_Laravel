@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Services\CreateLogService;
 
 class LoginController extends Controller
@@ -55,14 +56,28 @@ class LoginController extends Controller
             'user_password' => 'required|min:6'
         ]);
 
-        if (Auth::attempt(['user_email' => $request->user_email, 'password' => $request->user_password])) {
+        if (method_exists($this, 'hasTooManyLoginAttempts') &&
+            $this->hasTooManyLoginAttempts($request)) {
+            $this->fireLockoutEvent($request);
 
-            //ログの作成
-            $createLogService->createLog(\Consts::LOG_LOGIN, \Consts::TABLE_USER, Auth::id(), $request);
+            return $this->sendLockoutResponse($request);
+        }
+
+        if (Auth::attempt(['user_email' => $request->user_email, 'password' => $request->user_password])) {
+            DB::beginTransaction();
+            try {
+                //ログの作成
+                $createLogService->createLog(\Consts::LOG_LOGIN, \Consts::TABLE_USER, Auth::id(), $request);
+
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollback();
+            }
 
             return redirect()->intended($this->redirectTo);
         }
-        return redirect('/login');
+
+        return $this->sendFailedLoginResponse($request);
     }
 
     public function username()

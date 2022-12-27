@@ -28,10 +28,18 @@ class SystemInfoController extends Controller
             'error_email' => 'required|string|email|max:100'
         ]);
 
-        System::where('system_name', '=', 'error_email')->first()
-            ->update([
-                'system_value' => $request->error_email,
-            ]);
+        DB::beginTransaction();
+        try {
+            System::where('system_name', '=', 'error_email')->first()
+                ->update([
+                    'system_value' => $request->error_email,
+                ]);
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+        }
+
 
         return redirect()->back();
     }

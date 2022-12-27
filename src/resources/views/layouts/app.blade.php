@@ -52,7 +52,7 @@
                                 </li>
                             @endif
                         @else
-                            <img src="{{asset('storage/sample/' . Auth::user()->user_icon_image)}}" alt="{{Auth::user()->user_icon_image}}" width="100">
+                            @include('layouts.userIcon', ['user_icon_image'=>Auth::user()->user_icon_image])
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->user_name }} <span class="caret"></span>
@@ -74,7 +74,7 @@
                                     <a class="dropdown-item" href="{{ route('user.logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
+                                        {{ __('ログアウト') }}
                                     </a>
 
                                     <form id="logout-form" action="{{ route('user.logout') }}" method="POST" style="display: none;">

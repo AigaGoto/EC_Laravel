@@ -5,7 +5,7 @@ namespace App\Consts;
 class Consts
 {
     // ページネート(PAGINATE)
-    public const PAGINATE_NUM = 5;
+    public const PAGINATE_NUM = 15;
 
     // 評価(RATE)
     public const RATE_HIGH = 1;

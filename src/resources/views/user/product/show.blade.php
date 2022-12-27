@@ -3,10 +3,10 @@
 @section('content')
 <div>
 
-    @if (session('error'))
+    @if (session('duplicateReviewException'))
         <div class="alert alert-danger">
             <ul>
-                <li>{{ session('error') }}</li>
+                <li>{{ session('duplicateReviewException') }}</li>
             </ul>
         </div>
     @endif
@@ -27,7 +27,7 @@
 <div>
     <p>レビュー(合計{{$product->reviewCounts}}件)</p>
     @foreach($reviews as $review)
-        <img src="{{asset('storage/sample/' . $review->user->user_icon_image)}}" alt="{{$review->user->user_icon_image}}" width="100">
+        @include('layouts.userIcon', ['user_icon_image'=>$review->user->user_icon_image])
         <p>{{$review->user->user_name}}</p>
         <p>{{ $review->updated_at->format('Y/m/d H:i:s') }}</p>
         @foreach($review->tags as $tag)

@@ -28,7 +28,7 @@ class ProductController extends Controller
         $product_name = $request->input('product_name');
 
         // 商品名が検索されているなら絞り込む
-        $products = Product::when($product_name, function ($query, $product_name) {
+        $products = Product::with('reviews', 'rates')->when($product_name, function ($query, $product_name) {
             return $query->where('product_name', 'LIKE', "%{$product_name}%");
         })
         ->paginate(\Consts::PAGINATE_NUM);
@@ -67,14 +67,22 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($product_id);
 
-        $product->update([
-            'product_name' => $request->product_name,
-            'product_price' => $request->product_price,
-            'product_description' => $request->product_description,
-        ]);
+        DB::beginTransaction();
+        try {
+            $product->update([
+                'product_name' => $request->product_name,
+                'product_price' => $request->product_price,
+                'product_description' => $request->product_description,
+            ]);
 
-        // ログの作成
-        $this->createLogService->createLog(\Consts::LOG_UPDATE, \Consts::TABLE_PRODUCT, Auth::id(), $request);
+            // ログの作成
+            $this->createLogService->createLog(\Consts::LOG_UPDATE, \Consts::TABLE_PRODUCT, Auth::id(), $request);
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+        }
+
 
         return redirect()->back();
     }
@@ -88,10 +96,18 @@ class ProductController extends Controller
     public function destroy(Request $request, $product_id)
     {
         $product = Product::findOrFail($product_id);
-        $product->delete();
 
-        // ログの作成
-        $this->createLogService->createLog(\Consts::LOG_DELETE, \Consts::TABLE_PRODUCT, Auth::id(), $request);
+        DB::beginTransaction();
+        try {
+            $product->delete();
+
+            // ログの作成
+            $this->createLogService->createLog(\Consts::LOG_DELETE, \Consts::TABLE_PRODUCT, Auth::id(), $request);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+        }
+
 
         return redirect()->route('admin.product.index');
     }

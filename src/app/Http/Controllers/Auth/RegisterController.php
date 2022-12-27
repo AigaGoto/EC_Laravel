@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Model\User;
+use App\Model\Log;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class RegisterController extends Controller
 {
@@ -66,24 +68,47 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $dir = 'sample';
+        if (!empty($data['user_icon_image'])) {
+            $dir = 'sample';
 
-        $latest_user_id = User::latest('user_id')->first()->user_id;
-        // extension拡張子を取得する
-        $extension = $data['user_icon_image']->extension();
+            $latest_user_id = User::latest('user_id')->first()->user_id;
+            // extension拡張子を取得する
+            $extension = $data['user_icon_image']->extension();
 
-        // ユーザーIDの一番後ろ + 1 でfile_nameを設定する
-        $file_name = ($latest_user_id+1) . '.'. $extension;
+            // ユーザーIDの一番後ろ + 1 でfile_nameを設定する
+            $file_name = ($latest_user_id+1) . '.'. $extension;
 
-        $data['user_icon_image']->storeAs('public/' . $dir, $file_name);
+            $data['user_icon_image']->storeAs('public/' . $dir, $file_name);
+        } else {
+            $file_name = '';
+        }
 
-        return User::create([
-            'user_name' => $data['user_name'],
-            'user_email' => $data['user_email'],
-            'user_password' => Hash::make($data['user_password']),
-            'user_birthday' => $data['user_birthday'],
-            'user_gender' => $data['user_gender'],
-            'user_icon_image' => $file_name,
-        ]);
+        DB::beginTransaction();
+        try {
+            $user = User::create([
+                'user_name' => $data['user_name'],
+                'user_email' => $data['user_email'],
+                'user_password' => Hash::make($data['user_password']),
+                'user_birthday' => $data['user_birthday'],
+                'user_gender' => $data['user_gender'],
+                'user_icon_image' => $file_name,
+            ]);
+
+            $log = Log::create([
+                'log_type' => \Consts::LOG_REGISTER,
+                'log_table_type' => \Consts::TABLE_USER,
+                'log_ip_address' => $_SERVER["REMOTE_ADDR"],
+                'log_user_agent' => $_SERVER['HTTP_USER_AGENT'],
+                'user_id' => $user->user_id,
+                'log_path' => $_SERVER['REQUEST_URI'],
+            ]);
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+        }
+
+
+        return $user;
     }
 }

@@ -28,13 +28,21 @@ class ProfileController extends Controller
             'admin_name' => 'required|string|max:20',
         ]);
 
-        Auth::user()->update([
-            'admin_name' => $request->admin_name,
-            'admin_email' => $request->admin_email,
-        ]);
+        DB::beginTransaction();
+        try {
+            Auth::user()->update([
+                'admin_name' => $request->admin_name,
+                'admin_email' => $request->admin_email,
+            ]);
 
-        // ログの作成
-        $createLogService->createLog(\Consts::LOG_UPDATE, \Consts::TABLE_ADMIN, Auth::id(), $request);
+            // ログの作成
+            $createLogService->createLog(\Consts::LOG_UPDATE, \Consts::TABLE_ADMIN, Auth::id(), $request);
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+        }
+
 
         return redirect()->back();
     }

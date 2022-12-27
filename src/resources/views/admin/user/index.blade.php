@@ -28,7 +28,7 @@
             @foreach($users as $user)
             <tr>
                 <td>
-                    <img src="{{asset('storage/sample/' . $user->user_icon_image)}}" alt="{{$user->user_icon_image}}" width="50">
+                    @include('layouts.userIcon', ['user_icon_image'=>$user->user_icon_image])
                 </td>
                 <td>{{ $user->user_id }}</td>
                 <td>{{ $user->user_name }}</td>

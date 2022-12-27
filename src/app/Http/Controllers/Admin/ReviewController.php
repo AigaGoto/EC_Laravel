@@ -25,7 +25,7 @@ class ReviewController extends Controller
         $keyword = $request->input('keyword');
 
         // レビューのキーワードが検索されているなら絞り込む
-        $reviews = Review::when($keyword, function ($query, $keyword) {
+        $reviews = Review::with('user', 'product')->when($keyword, function ($query, $keyword) {
             return $query->where('review_content', 'LIKE', "%{$keyword}%");
         })
         ->paginate(\Consts::PAGINATE_NUM);
@@ -67,10 +67,19 @@ class ReviewController extends Controller
     public function destroy(Request $request,$review_id, CreateLogService $createLogService)
     {
         $review = Review::find($review_id);
-        $review->delete();
 
-        // ログの作成
-        $createLogService->createLog(\Consts::LOG_DELETE, \Consts::TABLE_REVIEW, Auth::id(), $request);
+        DB::beginTransaction();
+        try {
+            $review->delete();
+
+            // ログの作成
+            $createLogService->createLog(\Consts::LOG_DELETE, \Consts::TABLE_REVIEW, Auth::id(), $request);
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+        }
+
 
         return redirect()->route('admin.review.index');
     }

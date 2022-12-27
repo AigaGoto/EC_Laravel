@@ -24,8 +24,9 @@ class ReviewController extends Controller
      */
     public function index()
     {
-        $user = User::find(Auth::id());
-        $reviews = $user->reviews()->latest()->paginate(\Consts::PAGINATE_NUM);
+        // 認証中のユーザーのレビューを取得
+        $reviews = Review::with('tags', 'product')->where('user_id', Auth::id())->latest()->paginate(\Consts::PAGINATE_NUM);
+
         foreach ($reviews as $key=>$review) {
             $diff_hours = now()->diffInHours($review->created_at);
             if($diff_hours <= 12) {
@@ -74,30 +75,36 @@ class ReviewController extends Controller
 
         $review = Review::with('tags')->find($review_id);
 
-        // レビューの更新
-        $review->review_content = $request->review_content;
-        $review->save();
-
-        // 前のタグをレビューから外す
-        if ($review->tags != null) {
-            foreach($review->tags as $tag) {
-                $tag->reviews()->detach($review->review_id);
+        DB::beginTransaction();
+        try {
+            // レビューの更新
+            $review->review_content = $request->review_content;
+            $review->save();
+            // 前のタグをレビューから外す
+            if ($review->tags != null) {
+                foreach($review->tags as $tag) {
+                    $tag->reviews()->detach($review->review_id);
+                }
             }
+
+            // 新しいタグをレビューにつける
+            if ($request->tags != null) {
+                foreach ($request->tags as $tag_name) {
+                    $tag = Tag::firstOrCreate([
+                        'tag_name' => $tag_name
+                    ]);
+
+                    $tag->reviews()->attach($review->review_id);
+                };
+            }
+
+            // ログの作成
+            $createLogService->createLog(\Consts::LOG_UPDATE, \Consts::TABLE_REVIEW, Auth::id(), $request);
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
         }
-
-        // 新しいタグをレビューにつける
-        if ($request->tags != null) {
-            foreach ($request->tags as $tag_name) {
-                $tag = Tag::firstOrCreate([
-                    'tag_name' => $tag_name
-                ]);
-
-                $tag->reviews()->attach($review->review_id);
-            };
-        }
-
-        // ログの作成
-        $createLogService->createLog(\Consts::LOG_UPDATE, \Consts::TABLE_REVIEW, Auth::id(), $request);
 
         return redirect()->route('user.review.index');
     }

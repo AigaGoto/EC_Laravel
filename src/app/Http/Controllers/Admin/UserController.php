@@ -25,16 +25,13 @@ class UserController extends Controller
     {
         $user_name = $request->input('user_name');
 
-        $query = User::query();
+        // ユーザーの名前が検索されているなら絞り込む
+        $users = User::with('reviews')->when($user_name, function ($query, $user_name) {
+            return $query->where('user_name', 'LIKE', "%{$user_name}%");
+        })
+        ->paginate(\Consts::PAGINATE_NUM);
 
-        // ユーザー名が入力されているなら、検索する
-        if (!empty($user_name)) {
-            $query->where('user_name', 'LIKE', "%{$user_name}%");
-        }
-
-        $users = $query->paginate(\Consts::PAGINATE_NUM);
-
-        // レビューに基づいたユーザーと商品のデータを紐付ける
+        // ユーザーのレビュー数と年齢を取得
         foreach ($users as $key => $value) {
             $users[$key]['review_count'] = $users[$key]->reviews->count();
             $users[$key]['user_age'] = Carbon::parse($users[$key]->user_birthday)->age;
@@ -87,16 +84,23 @@ class UserController extends Controller
             $path = $newImage->storeAs($root_path, $file_name);
         }
 
-        $user->update([
-            'user_name' => $request->user_name,
-            'user_email' => $request->user_email,
-            'user_birthday' => $request->user_birthday,
-            'user_gender' => $request->user_gender,
-            'user_icon_image' => $file_name,
-        ]);
+        DB::beginTransaction();
+        try {
+            $user->update([
+                'user_name' => $request->user_name,
+                'user_email' => $request->user_email,
+                'user_birthday' => $request->user_birthday,
+                'user_gender' => $request->user_gender,
+                'user_icon_image' => $file_name,
+            ]);
 
-        // ログの作成
-        $createLogService->createLog(\Consts::LOG_UPDATE, \Consts::TABLE_USER, Auth::id(), $request);
+            // ログの作成
+            $createLogService->createLog(\Consts::LOG_UPDATE, \Consts::TABLE_USER, Auth::id(), $request);
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+        }
 
         return redirect()->back();
     }

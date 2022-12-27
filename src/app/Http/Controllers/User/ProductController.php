@@ -9,7 +9,6 @@ use App\Model\Rate;
 use App\Model\Review;
 use App\Services\GetProductService;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {

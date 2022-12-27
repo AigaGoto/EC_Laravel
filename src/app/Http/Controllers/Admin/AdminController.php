@@ -60,14 +60,23 @@ class AdminController extends Controller
             'admin_name' => 'required|string|max:20',
         ]);
 
-        Admin::create([
-            'admin_email' => $request->admin_email,
-            'admin_password' => Hash::make($request->admin_password),
-            'admin_name' => $request->admin_name,
-        ]);
+        DB::beginTransaction();
 
-        // ログの作成
-        $createLogService->createLog(\Consts::LOG_REGISTER, \Consts::TABLE_ADMIN, Auth::id(), $request);
+        try {
+            Admin::create([
+                'admin_email' => $request->admin_email,
+                'admin_password' => Hash::make($request->admin_password),
+                'admin_name' => $request->admin_name,
+            ]);
+
+            // ログの作成
+            $createLogService->createLog(\Consts::LOG_REGISTER, \Consts::TABLE_ADMIN, Auth::id(), $request);
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+        }
+
 
         return redirect()->route('admin.admin.index');
     }
