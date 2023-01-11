@@ -1,17 +1,29 @@
 @extends('layouts.app')
 
 @section('content')
-<div>
+<div class="center">
     @foreach($products as $product)
-        <img src="{{$product->product_image_file}}" alt="{{$product->product_image_file}}" width="100">
-        <a href="{{ route('user.product.show', $product->product_id) }}">{{ $product->product_name }}</a>
-        <p>¥{{ $product->product_price }}</p>
-        <p>高評価</p>
-        <p>{{ $product->highrateCounts }}</p>
-        <p>低評価</p>
-        <p>{{ $product->lowrateCounts }}</p>
-        <p>レビュー数</p>
-        <p>{{ $product->reviewCounts }}</p>
+        <div class="product-item">
+            <img src="{{$product->product_image_file}}" alt="{{$product->product_image_file}}" width="100">
+            <div class="product-item-right">
+                <a href="{{ route('user.product.show', $product->product_id) }}" class="product-name">{{ $product->product_name }}</a>
+                <p class="product-price">¥{{ $product->product_price }}</p>
+                <div class="product-item-right-bottom">
+                    <span>
+                        <iconify-icon icon="icon-park-solid:good-two"></iconify-icon>
+                        <span>{{ $product->highrateCounts }}</span>
+                    </span>
+                    <span>
+                        <iconify-icon icon="icon-park-solid:bad-two"></iconify-icon>
+                        <span>{{ $product->lowrateCounts }}</span>
+                    </span>
+                    <span>
+                        <span>レビュー数</span>
+                        <span>{{ $product->reviewCounts }}</span>
+                    </span>
+                </div>
+            </div>
+        </div>
     @endforeach
     {{ $products->links() }}
 
