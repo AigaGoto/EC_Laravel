@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="center">
+<div class="main-container">
 
     @if (session('duplicateReviewException'))
     <div class="alert alert-danger">
@@ -34,31 +34,18 @@
             <p class="product-description-main">{{ $product->product_description }}</p>
         </div>
     </div>
-    <div class="border-line"></div>
     <div class="reviews">
         <p class="review-total">レビュー(合計{{$product->reviewCounts}}件)</p>
         @foreach($reviews as $review)
-            <div class="review-item">
-                <div class="review-item-top">
-                    @include('layouts.userIcon', ['user_icon_image'=>$review->user->user_icon_image])
-                    <p class="review-user-name">{{$review->user->user_name}}</p>
-                    <p class="review-time">{{ $review->updated_at->format('Y/m/d H:i:s') }}</p>
-                </div>
-                <div class="review-tag-block">
-                    @foreach($review->tags as $tag)
-                        <p class="review-tag">{{  $tag->tag_name }}</p>
-                    @endforeach
-                </div>
-                <p class="review-content">{{ $review->review_content }}</p>
-            </div>
+            @include('layouts.review')
         @endforeach
     </div>
     <div class="after-content">
-        <a class="all-review-button" href="{{ route('user.product.review.index', $product->product_id) }}">全てのレビューを参照</a>
+        <a class="left-button white-button" href="{{ route('user.product.review.index', $product->product_id) }}">全てのレビューを参照</a>
         @if(empty($login_user_review))
-        <a class="write-review-button" href="{{ route('user.product.review.create', $product->product_id) }}">レビューを書く</a>
+            <a class="gray-button" href="{{ route('user.product.review.create', $product->product_id) }}">レビューを書く</a>
         @else
-        <p>レビュー投稿済み</p>
+            <p class="after-review">レビュー投稿済み</p>
         @endif
     </div>
 </div>

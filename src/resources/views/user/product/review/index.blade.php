@@ -1,22 +1,18 @@
 @extends('layouts.app')
 
 @section('content')
-<div>
-    <div>
+<div class="main-container">
+    <div class="product-top">
         <img src="{{$product->product_image_file}}" alt="{{$product->product_image_file}}" width="100">
         <p>{{ $product->product_name }}</p>
     </div>
-    <div>
-        <p>レビュー(合計{{$product->reviewCounts}}件)</p>
+    <div class="reviews">
+        <p class="review-total">レビュー(合計{{$product->reviewCounts}}件)</p>
         @foreach($reviews as $review)
-            @include('layouts.userIcon', ['user_icon_image'=>$review->user->user_icon_image])
-            <p>{{$review->user->user_name}}</p>
-            <p>{{ $review->updated_at->format('Y/m/d H:i:s') }}</p>
-            @foreach($review->tags as $tag)
-                <p>{{  $tag->tag_name }}</p>
-            @endforeach
-            <p>{{ $review->review_content }}</p>
+            @include('layouts.review')
         @endforeach
+    </div>
+    <div class="paginate">
         {{ $reviews->links() }}
 
         @if (count($reviews) >0)
@@ -27,6 +23,9 @@
             <p>データがありません。</p>
         @endif
     </div>
-    <a href="{{route('user.product.show', $product->product_id)}}">商品詳細ページはこちら</a>
+
+    <div class="after-content">
+        <a class="white-button" href="{{route('user.product.show', $product->product_id)}}">商品詳細ページはこちら</a>
+    </div>
 </div>
 @endsection

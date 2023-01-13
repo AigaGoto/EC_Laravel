@@ -3,8 +3,10 @@
 @section('content')
 <div>
     <h1>この商品のレビューを編集</h1>
-    <img src="{{$product->product_image_file}}" alt="{{$product->product_image_file}}" width="100">
-    <p>{{ $product->product_name }}</p>
+    <div class="product-top">
+        <img src="{{$product->product_image_file}}" alt="{{$product->product_image_file}}">
+        <p>{{ $product->product_name }}</p>
+    </div>
 
     <p>-----------------------------</p>
     {{-- バリデーションエラーの表示 --}}

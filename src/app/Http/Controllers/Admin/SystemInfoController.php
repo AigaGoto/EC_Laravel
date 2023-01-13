@@ -17,7 +17,10 @@ class SystemInfoController extends Controller
     public function index()
     {
         // エラー通知先メールアドレスを取得
-        $error_email = System::where('system_name', '=', 'error_email')->first()->system_value;
+        $error_email = System::where('system_name', '=', 'error_email')->first();
+
+        // 存在しなかったらnull, 存在したら値を取得
+        if(!empty($error_email)) $error_email = $error_email->system_value;
 
         return view('admin.systemInfo', compact('error_email'));
     }
@@ -30,10 +33,10 @@ class SystemInfoController extends Controller
 
         DB::beginTransaction();
         try {
-            System::where('system_name', '=', 'error_email')->first()
-                ->update([
-                    'system_value' => $request->error_email,
-                ]);
+            $error_email = System::updateOrCreate(
+                    ['system_name' => 'error_email'],
+                    ['system_value' => $request->error_email],
+                );
 
             DB::commit();
         } catch (\Exception $e) {

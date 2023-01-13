@@ -1,10 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
-<div>
+<div class="main-container">
     <h1>この商品をレビュー</h1>
-    <img src="{{$product->product_image_file}}" alt="{{$product->product_image_file}}" width="100">
-    <p>{{ $product->product_name }}</p>
+
+    <div class="product-top">
+        <img src="{{$product->product_image_file}}" alt="{{$product->product_image_file}}">
+        <p>{{ $product->product_name }}</p>
+    </div>
 
     <p>------------------------</p>
 
@@ -24,9 +27,10 @@
         <input type="hidden" name="review_content" value="{{ $review_content }}">
 
     <p>---------------------</p>
-
-        <input type="submit" name='back' value='戻る'>
-        <input type="submit" value="レビューを投稿">
+        <div class="after-content">
+            <input class="white-button left-button" type="submit" name='back' value='戻る'>
+            <input class="gray-button" type="submit" value="レビューを投稿">
+        </div>
     </form>
 </div>
 @endsection

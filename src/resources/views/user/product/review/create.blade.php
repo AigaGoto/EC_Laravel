@@ -1,15 +1,17 @@
 @extends('layouts.app')
 
 @section('content')
-<div>
+<div class="main-container">
     <h1>この商品をレビュー</h1>
-    <img src="{{$product->product_image_file}}" alt="{{$product->product_image_file}}" width="100">
-    <p>{{ $product->product_name }}</p>
+
+    <div class="product-top">
+        <img src="{{$product->product_image_file}}" alt="{{$product->product_image_file}}">
+        <p>{{ $product->product_name }}</p>
+    </div>
 
     {{-- 評価ボタン --}}
     @include('layouts.rateButton')
 
-    <p>-----------------------------</p>
     {{-- バリデーションエラーの表示 --}}
     @if ($errors->any())
         <div class="alert alert-danger">
@@ -23,29 +25,35 @@
 
     <form method="POST" action="{{ route('user.product.review.confirm', $product->product_id) }}">
         @csrf
-        <h1>タグ</h1>
-        <p>タグを入力</p>
-        <input type="text" id="tagTextbox">
-        <button type="button" onclick="addTag()">タグを追加</button>
+        <div class="review-create-tag-block">
+            <h1>タグ</h1>
+            <p>タグを入力</p>
+            <input class="tag-input" type="text" id="tagTextbox">
+            <button class="gray-button" type="button" onclick="addTag()">タグを追加</button>
 
-        {{-- ここに追加されたタグを表示 --}}
-        <div id='tags'>
-            @if(old('tags'))
+            {{-- ここに追加されたタグを表示 --}}
+            <div id='tags'>
+                @if(old('tags'))
                 @foreach(old('tags') as $tag_name)
                     <div>
-                        <p>{{ $tag_name }}</p>
+                        <span>{{ $tag_name }}</span>
                         <input class="tag_input" name="{{"tags[" . $loop->index . "]"}}" type="hidden" value="{{$tag_name}}">
                         <button type="button" onclick="removeTag(this)">x</button>
                     </div>
                 @endforeach
-            @endif
+                @endif
+            </div>
         </div>
 
-        <p>------------------------------</p>
-        <h1>レビュー内容</h1>
-        <input type="text" name="review_content" value="{{ old('review_content') }}">
-        <a href="{{ route('user.product.show', $product->product_id) }}">戻る</a>
-        <input type="submit" value="レビューを確認">
+        <div class="review-create-reviewcontent-block">
+            <h1>レビュー内容</h1>
+            <textarea class="review-input" type="text" name="review_content" value="{{ old('review_content') }}"></textarea>
+        </div>
+
+        <div class="after-content">
+            <a class="left-button white-button" href="{{ route('user.product.show', $product->product_id) }}">キャンセル</a>
+            <input class="gray-button" type="submit" value="レビューを確認">
+        </div>
     </form>
 
 </div>
@@ -71,8 +79,9 @@
         }
 
         // 表示用要素
-        let newTagName = document.createElement("p");
+        let newTagName = document.createElement("span");
         newTagName.textContent = tagTextbox.value;
+        newTagName.classList.add("tag");
 
         // 送信用要素
         let newTagSubmit = document.createElement("input");
