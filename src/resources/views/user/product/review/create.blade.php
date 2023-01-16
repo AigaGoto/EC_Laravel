@@ -31,14 +31,17 @@
             <input class="tag-input" type="text" id="tagTextbox">
             <button class="gray-button" type="button" onclick="addTag()">タグを追加</button>
 
+            <p class="review-add-tag-text">追加するタグ</p>
             {{-- ここに追加されたタグを表示 --}}
-            <div id='tags'>
+            <div id='tags' class="review-add-tags">
                 @if(old('tags'))
                 @foreach(old('tags') as $tag_name)
-                    <div>
-                        <span>{{ $tag_name }}</span>
+                    <div class="tag-wrapper">
+                        <span class="tag add-tag">{{ $tag_name }}</span>
                         <input class="tag_input" name="{{"tags[" . $loop->index . "]"}}" type="hidden" value="{{$tag_name}}">
-                        <button type="button" onclick="removeTag(this)">x</button>
+                        <button class="tag-delete-button" type="button" onclick="removeTag(this)">
+                            <iconify-icon icon="material-symbols:cancel" />
+                        </button>
                     </div>
                 @endforeach
                 @endif
@@ -47,7 +50,7 @@
 
         <div class="review-create-reviewcontent-block">
             <h1>レビュー内容</h1>
-            <textarea class="review-input" type="text" name="review_content" value="{{ old('review_content') }}"></textarea>
+            <textarea class="review-input" type="text" name="review_content">{{ old('review_content') }}</textarea>
         </div>
 
         <div class="after-content">
@@ -81,7 +84,7 @@
         // 表示用要素
         let newTagName = document.createElement("span");
         newTagName.textContent = tagTextbox.value;
-        newTagName.classList.add("tag");
+        newTagName.classList.add("tag", "add-tag");
 
         // 送信用要素
         let newTagSubmit = document.createElement("input");
@@ -92,14 +95,18 @@
         // 削除用ボタン
         let deleteButton = document.createElement("button");
         deleteButton.setAttribute("type", "button");
-        deleteButton.textContent = "x"
         deleteButton.setAttribute("onclick", "removeTag(this)")
+        deleteButton.classList.add("tag-delete-button");
+        let deleteIcon = document.createElement("iconify-icon");
+        deleteIcon.setAttribute("icon", "material-symbols:cancel")
+        deleteButton.appendChild(deleteIcon);
 
         // 上記の要素を一つのdivに入れて挿入
         let newDiv = document.createElement("div");
         newDiv.appendChild(newTagName);
         newDiv.appendChild(newTagSubmit);
         newDiv.appendChild(deleteButton);
+        newDiv.classList.add("tag-wrapper");
 
         tags.appendChild(newDiv);
 

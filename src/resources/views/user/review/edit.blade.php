@@ -1,14 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
-<div>
+<div class="main-container">
     <h1>この商品のレビューを編集</h1>
     <div class="product-top">
         <img src="{{$product->product_image_file}}" alt="{{$product->product_image_file}}">
         <p>{{ $product->product_name }}</p>
     </div>
 
-    <p>-----------------------------</p>
     {{-- バリデーションエラーの表示 --}}
     @if ($errors->any())
         <div class="alert alert-danger">
@@ -22,44 +21,56 @@
 
     <form method="POST" action="{{ route('user.review.confirm', $review->review_id) }}">
         @csrf
-        <h1>タグ</h1>
-        <p>タグを入力</p>
-        <input type="text" id="tagTextbox">
-        <button type="button" onclick="addTag()">タグを追加</button>
+        <div class="review-create-tag-block">
+            <h1>タグ</h1>
+            <p>タグを入力</p>
+            <input class="tag-input" type="text" id="tagTextbox">
+            <button class="gray-button" type="button" onclick="addTag()">タグを追加</button>
 
-        {{-- ここに追加されたタグを表示 --}}
-        <div id='tags'>
-            @if(old('tags'))
-                @foreach(old('tags') as $tag_name)
-                    <div>
-                        <p>{{ $tag_name }}</p>
-                        <input class="tag_input" name="{{"tags[" . $loop->index . "]"}}" type="hidden" value="{{$tag_name}}">
-                        <button type="button" onclick="removeTag(this)">x</button>
-                    </div>
-                @endforeach
-            @elseif($tags)
-                @foreach($tags as $tag)
-                    <div>
-                        <p>{{ $tag->tag_name }}</p>
-                        <input class="tag_input" name="{{"tags[" . $loop->index . "]"}}" type="hidden" value="{{$tag->tag_name}}">
-                        <button type="button" onclick="removeTag(this)">x</button>
-                    </div>
-                @endforeach
+            <p class="review-add-tag-text">追加するタグ</p>
+            {{-- ここに追加されたタグを表示 --}}
+            <div id='tags' class="review-add-tags">
+                @if(old('tags'))
+                    @foreach(old('tags') as $tag_name)
+                        <div class="tag-wrapper">
+                            <span class="tag add-tag">{{ $tag_name }}</span>
+                            <input class="tag_input" name="{{"tags[" . $loop->index . "]"}}" type="hidden" value="{{$tag_name}}">
+                            <button class="tag-delete-button" type="button" onclick="removeTag(this)">
+                                <iconify-icon icon="material-symbols:cancel" />
+                            </button>
+                        </div>
+                    @endforeach
+                @elseif($tags)
+                    @foreach($tags as $tag)
+                        <div class="tag-wrapper">
+                            <span class="tag add-tag">{{ $tag->tag_name }}</span>
+                            <input class="tag_input" name="{{"tags[" . $loop->index . "]"}}" type="hidden" value="{{$tag->tag_name}}">
+                            <button class="tag-delete-button" type="button" onclick="removeTag(this)">
+                                <iconify-icon icon="material-symbols:cancel" />
+                            </button>
+                        </div>
+                    @endforeach
+                @endif
+            </div>
+        </div>
+
+        <div class="review-create-reviewcontent-block">
+            <h1>レビュー内容</h1>
+            @if (old('review_content') || $errors->any())
+                <textarea class="review-input" type="text" name="review_content" >{{ old('review_content') }}</textarea>
+            @else
+                <textarea class="review-input" type="text" name="review_content">{{ $review->review_content }}</textarea>
             @endif
         </div>
 
-        <p>------------------------------</p>
-        <h1>レビュー内容</h1>
-        @if (old('review_content') || $errors->any())
-            <input type="text" name="review_content" value="{{ old('review_content') }}">
-        @else
-            <input type="text" name="review_content"  value="{{ $review->review_content }}">
-        @endif
-        <a href="{{ route('user.review.index') }}">戻る</a>
-        <input type="submit" value="レビューを確認">
+        <div class="after-content">
+            <a class="left-button white-button" href="{{ route('user.review.index') }}">戻る</a>
+            <input class="gray-button" type="submit" value="レビューを確認">
+        </div>
     </form>
-
 </div>
+
+@endsection
 
 <script>
     function removeTag(button) {
@@ -80,8 +91,9 @@
         }
 
         // 表示用要素
-        let newTagName = document.createElement("p");
+        let newTagName = document.createElement("span");
         newTagName.textContent = tagTextbox.value;
+        newTagName.classList.add("tag", "add-tag");
 
         // 送信用要素
         let newTagSubmit = document.createElement("input");
@@ -92,14 +104,18 @@
         // 削除用ボタン
         let deleteButton = document.createElement("button");
         deleteButton.setAttribute("type", "button");
-        deleteButton.textContent = "x"
         deleteButton.setAttribute("onclick", "removeTag(this)")
+        deleteButton.classList.add("tag-delete-button");
+        let deleteIcon = document.createElement("iconify-icon");
+        deleteIcon.setAttribute("icon", "material-symbols:cancel")
+        deleteButton.appendChild(deleteIcon);
 
         // 上記の要素を一つのdivに入れて挿入
         let newDiv = document.createElement("div");
         newDiv.appendChild(newTagName);
         newDiv.appendChild(newTagSubmit);
         newDiv.appendChild(deleteButton);
+        newDiv.classList.add("tag-wrapper");
 
         tags.appendChild(newDiv);
 
@@ -117,4 +133,3 @@
     })
 
 </script>
-@endsection

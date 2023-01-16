@@ -6,7 +6,7 @@
     </div>
     <div class="review-tag-block">
         @foreach($review->tags as $tag)
-            <p class="tag">{{  $tag->tag_name }}</p>
+            <p class="tag review-tag">{{  $tag->tag_name }}</p>
         @endforeach
     </div>
     <p class="review-content">{{ $review->review_content }}</p>

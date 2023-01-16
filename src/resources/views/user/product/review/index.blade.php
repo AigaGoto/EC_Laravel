@@ -2,6 +2,8 @@
 
 @section('content')
 <div class="main-container">
+    <h1>レビュー一覧</h1>
+
     <div class="product-top">
         <img src="{{$product->product_image_file}}" alt="{{$product->product_image_file}}" width="100">
         <p>{{ $product->product_name }}</p>
@@ -12,6 +14,7 @@
             @include('layouts.review')
         @endforeach
     </div>
+
     <div class="paginate">
         {{ $reviews->links() }}
 

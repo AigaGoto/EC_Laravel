@@ -28,10 +28,17 @@
    display: flex;
    flex-direction: column;
    align-items: center;
+   margin-top: 20px;
 }
 
 .main-container {
+    width: 70%;
     margin: 0 15%;
+}
+
+.user-icon {
+    border-radius: 50%;
+    width: 50px;
 }
 
 /* ボタン */
@@ -58,8 +65,54 @@
     border-radius: 20px;
 }
 
+.gray-button:hover {
+    text-decoration: none;
+    background-color: black;
+    color: #cccccc;
+}
+
 .left-button {
     margin-right: auto;
+}
+
+.review-edit-button {
+    border: none;
+    background-color: #cccccc;
+    color: black;
+    padding: 5px 40px;
+    border-radius: 20px;
+    margin: 0 0 10px auto;
+}
+
+.review-edit-button:hover {
+    text-decoration: none;
+    background-color: black;
+    color: #cccccc;
+}
+
+/* サイドバー */
+.main-side-container {
+    display: flex;
+    width: 100%;
+}
+
+.sidebar {
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-right: 1px solid black;
+}
+
+.sidebar-item {
+    color: black;
+    margin-top: 20px;
+}
+
+.sidebar-item:hover{
+    color: black;
+    text-decoration: none;
+    background-color: rgba(45, 45, 45, 5%);
 }
 
 /* 商品一覧画面 */
@@ -68,6 +121,15 @@
     display: flex;
     margin: 20px 0;
     width: 100%;
+}
+
+.product-name {
+    color: black;
+}
+
+.product-name:hover {
+    text-decoration: none;
+    color: #C7511F;
 }
 
 .product-price {
@@ -165,14 +227,76 @@
     width: 100%;
 }
 
+.review-create-tag-input {
+    display: block;
+}
+
 .tag-input {
     width: 30%;
+}
+
+.review-add-tags {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.review-add-tag-text {
+    margin: 20px 0;
 }
 
 .review-input {
     width:  100%;
     height: 40%;
     vertical-align:top;
+}
+
+/* レビュー確認画面 */
+.review-confirm-preview {
+    border-top: 1px solid #cccccc;
+    padding-top: 20px;
+}
+
+/* 購入履歴画面 */
+.purchase-history-item {
+    width: 100%;
+    display: flex;
+    border-bottom: 1px solid #cccccc;
+    padding: 20px 0;
+}
+
+.purchase-history-item-left {
+    display: flex;
+    width: 60%;
+}
+
+.purchase-history-item-product-img {
+    width: 50%;
+}
+
+.purchase-history-item-product-name {
+    font-size: 20px;
+    margin: auto 0 auto 10px;
+    overflow-wrap: break-word;
+}
+
+.purchase-history-item-right {
+    width: 40%;
+    margin-left: 20%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    font-size: 14px;
+}
+
+/* ユーザー情報画面 */
+.profile-item {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 40px;
+}
+
+.profile-input {
+    width: 200px;
 }
 
 /* 評価ボタン */
@@ -219,14 +343,14 @@
     display: flex;
 }
 
-.review-item-top img {
-    border-radius: 50%;
-    width: 50px;
-}
-
 .review-user-name {
     font-size: 20px;
     margin: auto 0 auto 10px;
+}
+
+.review-product-name {
+    font-size: 20px;
+    margin: auto 0 auto 10px
 }
 
 .review-time {
@@ -237,6 +361,13 @@
 .review-tag-block {
     margin-top: 10px;
     display: flex;
+    flex-wrap: wrap;
+}
+
+.review-tag {
+    font-size: 12px;
+    padding: 5px;
+    margin-right: 8px;
 }
 
 .review-content {
@@ -249,6 +380,29 @@
     color: black;
     background-color: #dddddd;
     border-radius: 30px;
-    font-size: 12px;
-    padding: 5px;
 }
+
+.add-tag {
+    font-size: 16px;
+    padding: 7px;
+}
+
+.tag-wrapper {
+    position: relative;
+    margin: 0 10px 20px 0;
+}
+
+.tag-delete-button {
+    position: absolute;
+    right: -15px;
+    top: -15px;
+    font-size: 20px;
+    border: none;
+    background-color: rgba(0, 0, 0, 0);
+    opacity: 60%;
+}
+
+.tag-delete-button:hover {
+    opacity: 100%;
+}
+
