@@ -1,4 +1,4 @@
-<div>
+<div class="sidebar">
     <a href="{{route('admin.review.index')}}">レビュー一覧</a>
     <a href="{{route('admin.user.index')}}">ユーザー一覧</a>
     <a href="{{route('admin.product.index')}}">商品一覧</a>

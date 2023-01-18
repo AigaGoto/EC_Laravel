@@ -2,7 +2,7 @@
 
 @section('content')
 @include('layouts.adminSidebar')
-<div>
+<div class="admin-main-container">
     <h1>ユーザー情報</h1>
 
     {{-- バリデーションエラーの表示 --}}

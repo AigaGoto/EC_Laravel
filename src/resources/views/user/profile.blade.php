@@ -13,9 +13,13 @@
 
             <div class="profile-item">
                 <label for="user_icon_image" >{{ __('アイコン画像') }}</label>
-                <div>
+                <div class="profile-user-icon">
                     @include('layouts.userIcon', ['user_icon_image'=>Auth::user()->user_icon_image])
-                    <input id="user_icon_image" type="file" name="user_icon_image" value="{{ Auth::user()->user_icon_image }}">
+                    <label class="white-button edit-user-icon-button">
+                        <input id="user_icon_image" type="file" name="user_icon_image" value="{{ Auth::user()->user_icon_image }}">
+                        <iconify-icon icon="akar-icons:pencil" /></iconify-icon>
+                        編集
+                    </label>
                 </div>
 
                 @error('user_icon_image')
@@ -26,7 +30,7 @@
             </div>
 
             <div class="profile-item">
-                <label for="user_name" >{{ __('名前') }}</label>
+                <label for="user_name" >{{ __('ユーザー名') }}</label>
                 <input class="profile-input" id="user_name" type="text" name="user_name" value="{{ Auth::user()->user_name }}" required autocomplete="user_name" >
 
                 @error('user_name')
@@ -60,10 +64,12 @@
 
             <div  class="profile-item">
                 <label for="user_gender" >{{ __('性別') }}</label>
-                <div>
+                <div class="profile-gender-radio-button">
                     @foreach(Consts::GENDER_LIST as $key => $value)
+                    <div>
                         <input id="user_gender_{{$key}}" type="radio"  value="{{ $key }}"  name="user_gender" @if (Auth::user()->user_gender == $key) {{"checked"}} @endif>
                         <label for="user_gender_{{$key}}" class="form-check-label">{{ $value }}</label>
+                    </div>
                     @endforeach
                 </div>
 
