@@ -36,7 +36,7 @@
                     <td>{{ $review->product_name }}</td>
                     <td class="admin-table-long">{{ $review->review_content }}</td>
                     <td>{{ $review->created_at }}</td>
-                    <td class="admin-table-button"><a class="gray-button" href="{{route('admin.review.show', $review->review_id)}}">詳細表示</a></td>
+                    <td><a class="gray-button" href="{{route('admin.review.show', $review->review_id)}}">詳細表示</a></td>
                 </tr>
                 @endforeach
             </table>

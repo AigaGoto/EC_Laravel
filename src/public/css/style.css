@@ -45,11 +45,6 @@
     max-height: 50px;
 }
 
-.admin-main-container {
-    width: 100%;
-    margin: 0 5%;
-}
-
 /* ボタン */
 .white-button {
     box-sizing: border-box;
@@ -100,7 +95,7 @@
 }
 
 .right-button {
-    margin-left: auto;
+    float: right;
 }
 
 .review-edit-button {
@@ -144,6 +139,15 @@
 }
 
 /* 管理者画面 */
+.admin-main-container {
+    width: 100%;
+    margin: 0 5%;
+}
+
+.admin-content-wrapper {
+    margin-top: 80px;
+}
+
 .to-admin-register {
     color: black;
 }
@@ -163,13 +167,46 @@
 }
 
 .admin-text-input-block input {
+    max-width: 200px;
+}
+
+.log-type-checkbox {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.log-type-checkbox p {
+    margin-right: 20px;
+}
+
+.admin-table-search {
+    margin-bottom: 50px;
+}
+
+.admin-table-search input[type="text"]{
     width: 200px;
 }
 
-/* 管理者の表の部分 */
-.admin-content-wrapper {
+.admin-profile-edit-wrapper {
     margin-top: 80px;
+    width: 250px;
 }
+
+.admin-product-edit-wrapper {
+    margin-top: 80px;
+    margin-right: 15%;
+}
+
+.admin-create-admin-wrapper {
+    margin-top: 80px;
+    max-width: 300px;
+}
+
+.admin-review-show  {
+    margin-top: 60px;
+}
+
+/* 管理者の表の部分 */
 
 .admin-table {
     margin-bottom: 20px;
@@ -195,10 +232,6 @@
     padding: 10px 5px;
     border: 1px solid black;
     background-color: white;
-    /* text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-    max-width: 0; */
 }
 
 .admin-table-long {
@@ -206,17 +239,6 @@
     white-space: nowrap;
     overflow: hidden;
     max-width: 0;
-}
-
-.admin-table-button {
-}
-
-.admin-table-search {
-    margin-bottom: 50px;
-}
-
-.admin-table-search input{
-    width: 200px;
 }
 
 /* 商品一覧画面 */
@@ -394,8 +416,14 @@
 
 /* ユーザー情報画面 */
 
+.profile-preview-block {
+    display: flex;
+}
+
 .profile-user-icon {
     position: relative;
+    padding-right: 20px;
+    margin: auto 0;
 }
 
 .profile-user-icon img {
@@ -414,6 +442,19 @@
     display: none;
 }
 
+.profile-user-icon-preview {
+    display: flex;
+    align-items: center;
+    font-size: 100px;
+}
+
+.profile-user-icon-preview img {
+    width: 200px;
+    max-height: 200px;
+    border-radius: 50%;
+    margin-left: 20px;
+}
+
 .profile-item {
     display: flex;
     flex-direction: column;
@@ -428,6 +469,39 @@
     max-width: 150px;
     display: flex;
     justify-content: space-between;
+}
+
+/* 商品情報編集画面(管理者) */
+.product-icon {
+    width: 350px;
+}
+
+.product-icon img {
+    width: 350px;
+    max-height: 350px;
+}
+
+.edit-product-icon-button {
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.edit-product-icon-button input{
+    display: none;
+}
+
+.product-edit-item {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 40px;
+}
+
+.product-edit-input {
+    width: 200px;
+}
+
+.product-delete-button {
+    margin-top: 20px;
 }
 
 /* 評価ボタン */

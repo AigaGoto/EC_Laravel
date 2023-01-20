@@ -13,13 +13,19 @@
 
             <div class="profile-item">
                 <label for="user_icon_image" >{{ __('アイコン画像') }}</label>
-                <div class="profile-user-icon">
-                    @include('layouts.userIcon', ['user_icon_image'=>Auth::user()->user_icon_image])
-                    <label class="white-button edit-user-icon-button">
-                        <input id="user_icon_image" type="file" name="user_icon_image" value="{{ Auth::user()->user_icon_image }}">
-                        <iconify-icon icon="akar-icons:pencil" /></iconify-icon>
-                        編集
-                    </label>
+                <div class="profile-preview-block">
+                    <div class="profile-user-icon">
+                        @include('layouts.userIcon', ['user_icon_image'=>Auth::user()->user_icon_image])
+                        <label class="white-button edit-user-icon-button">
+                            <input id="user_icon_image" type="file" name="user_icon_image" value="{{ Auth::user()->user_icon_image }}" onchange="previewImage(this);">
+                            <iconify-icon icon="akar-icons:pencil" /></iconify-icon>
+                            編集
+                        </label>
+                    </div>
+                    <div class="profile-user-icon-preview" id="preview-display" style="display: none">
+                        <iconify-icon icon="material-symbols:double-arrow"></iconify-icon>
+                        <img id="preview" class="">
+                    </div>
                 </div>
 
                 @error('user_icon_image')
@@ -86,3 +92,16 @@
     </div>
 </div>
 @endsection
+
+<script>
+    function previewImage(obj)
+    {
+        let fileReader = new FileReader();
+        fileReader.onload = (function() {
+            document.getElementById('preview').src = fileReader.result;
+        });
+        fileReader.readAsDataURL(obj.files[0]);
+
+        document.getElementById('preview-display').style = "";
+    }
+</script>

@@ -11,11 +11,16 @@
                 @csrf
                 <p>操作名で検索</p>
 
-                @foreach (Consts::LOG_LIST as $key => $value)
-                    <p><input type="checkbox" name="log_type[]" value="{{ $key }}" @if(!empty($log_types) && in_array($key, $log_types)) {{"checked"}} @endif>{{$value}}</p>
-                @endforeach
+                <div class="log-type-checkbox">
+                    @foreach (Consts::LOG_LIST as $key => $value)
+                        <p>
+                            <input type="checkbox" name="log_type[]" value="{{ $key }}" @if(!empty($log_types) && in_array($key, $log_types)) {{"checked"}} @endif>
+                            {{$value}}
+                        </p>
+                    @endforeach
+                </div>
 
-                <button type="submit">
+                <button class="white-button" type="submit">
                     <iconify-icon icon="ic:baseline-search"></iconify-icon>
                     検索
                 </button>

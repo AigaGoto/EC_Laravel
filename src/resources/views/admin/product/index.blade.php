@@ -26,6 +26,7 @@
                     <th>レビュー数</th>
                     <th>高評価数</th>
                     <th>低評価数</th>
+                    <th></th>
                 </tr>
 
                 @foreach($products as $product)
@@ -33,7 +34,7 @@
                     <td>{{ $product->product_id }}</td>
                     <td>{{ $product->product_name }}</td>
                     <td>{{ $product->product_price }}</td>
-                    <td>{{ $product->product_description }}</td>
+                    <td class="admin-table-long">{{ $product->product_description }}</td>
                     <td>{{ $product->created_at }}</td>
                     <td>{{ $product->review_count }}</td>
                     <td>{{ $product->highrate_count }}</td>

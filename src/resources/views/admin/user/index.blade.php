@@ -24,6 +24,7 @@
                     <th>性別</th>
                     <th>登録日</th>
                     <th>レビューした数</th>
+                    <th></th>
                 </tr>
 
                 @foreach($users as $user)

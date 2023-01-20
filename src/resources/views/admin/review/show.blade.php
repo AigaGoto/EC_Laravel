@@ -11,7 +11,9 @@
             <p>{{ $product->product_name }}</p>
         </div>
 
-        @include('layouts.review')
+        <div class="admin-review-show">
+            @include('layouts.review')
+        </div>
 
         <div class="after-content">
             <button class="white-button left-button" onClick="history.back();">戻る</button>
