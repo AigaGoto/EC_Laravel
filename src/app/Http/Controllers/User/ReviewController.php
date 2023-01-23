@@ -10,6 +10,7 @@ use App\Model\Tag;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Services\CreateLogService;
+use App\Rules\CustomDistinctArrayValidation;
 
 class ReviewController extends Controller
 {
@@ -112,8 +113,8 @@ class ReviewController extends Controller
     public function confirm($review_id, Request $request)
     {
         $validatedData = $request->validate([
-            'tags' => 'array',
-            'tags.*' => 'max:100|distinct',
+            'tags' => ['array', new CustomDistinctArrayValidation],
+            'tags.*' => 'max:100',
             'review_content' => 'required',
         ]);
 

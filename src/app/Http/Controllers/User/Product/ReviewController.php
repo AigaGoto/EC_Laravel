@@ -8,10 +8,13 @@ use App\Model\Product;
 use App\Model\Rate;
 use App\Model\Review;
 use App\Model\Tag;
+use App\Model\System;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Services\CreateLogService;
 use App\Services\GetProductService;
+use Mail;
+use App\Rules\CustomDistinctArrayValidation;
 
 class ReviewController extends Controller
 {
@@ -50,8 +53,6 @@ class ReviewController extends Controller
         // 認証中のユーザーがレビューしているかを取得
         $login_user_review = Review::where('product_id', $product_id)->where('user_id', Auth::id())->first();
         if($login_user_review) {
-            // $error = "同じ商品には、1つしかレビューができません";
-            // dd(\Lang::get("messages"));
             return redirect()->route('user.product.show', $product_id)
                     ->with(\Lang::get("messages"));
         }
@@ -105,6 +106,16 @@ class ReviewController extends Controller
             // ログの作成
             $createLogService->createLog(\Consts::LOG_REGISTER, \Consts::TABLE_REVIEW, Auth::id(), $request);
 
+            // メールを送信する
+            $error_email = System::where('system_name', '=', 'error_email')->first();
+            if (!empty($error_email)) {
+                Mail::raw($request->review_content, function($message) use ($error_email){
+                    $message
+                        ->to($error_email->system_value)
+                        ->subject('レビューが投稿されました');
+                });
+            }
+
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
@@ -115,9 +126,12 @@ class ReviewController extends Controller
 
     public function confirm($product_id, Request $request)
     {
+        // 重複するタグは1つに統一する
+        // $request->tags = array_unique($request->tags);
+
         $validatedData = $request->validate([
-            'tags' => 'array',
-            'tags.*' => 'max:100|distinct',
+            'tags' => ['array', new CustomDistinctArrayValidation],
+            'tags.*' => 'max:100',
             'review_content' => 'required',
         ]);
 

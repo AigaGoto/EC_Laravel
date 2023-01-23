@@ -16,6 +16,13 @@
         </div>
     @endif
 
+    {{-- 更新成功の表示 --}}
+    @if (session('update_success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('update_success') }}
+        </div>
+    @endif
+
     <form class="admin-content-wrapper" method="POST" action="{{ route('admin.profile.update', Auth::user()->admin_id) }}">
         @csrf
         <input type="hidden" name="_method" value="PUT">

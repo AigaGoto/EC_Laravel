@@ -82,7 +82,7 @@
 
                             <div class="col-md-6">
                                 @foreach(Consts::GENDER_LIST as $key => $value)
-                                    <input id="user_gender_{{$key}}" type="radio" class="form-control @error('user_gender') is-invalid @enderror"  value="{{ $key }}"  name="user_gender" {{ old ('release') == Consts::GENDER_MALE ? 'checked' : '' }} @if ($key == Consts::GENDER_MALE) {{"checked"}} @endif>
+                                    <input id="user_gender_{{$key}}" type="radio" class=" @error('user_gender') is-invalid @enderror"  value="{{ $key }}"  name="user_gender" {{ old ('release') == Consts::GENDER_MALE ? 'checked' : '' }} @if ($key == Consts::GENDER_MALE) {{"checked"}} @endif>
                                     <label for="user_gender_{{$key}}" class="form-check-label">{{$value}}</label>
                                 @endforeach
 

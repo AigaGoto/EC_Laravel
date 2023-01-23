@@ -134,9 +134,6 @@ return [
     */
 
     'custom' => [
-        'review_content' => [
-            'required' => 'レビュー内容は必須です',
-        ],
         'tags.*' => [
             'max' => 'タグは100文字以下のみ有効です',
             'distinct' => 'タグは重複してはいけません',
@@ -158,6 +155,10 @@ return [
       |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'error_email' => 'エラーメール',
+        'review_content' => 'レビュー内容',
+        'tags' => 'タグ'
+    ],
 
 ];

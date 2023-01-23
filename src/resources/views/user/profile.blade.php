@@ -6,6 +6,13 @@
     <div class="main-container">
         <h1>ユーザー情報</h1>
 
+        {{-- 更新成功の表示 --}}
+        @if (session('update_success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('update_success') }}
+            </div>
+        @endif
+
         <form method="POST" action="{{ route('user.profileUpdate') }}" enctype="multipart/form-data">
             @csrf
 

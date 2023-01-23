@@ -39,6 +39,7 @@ class SystemInfoController extends Controller
                 );
 
             DB::commit();
+            session()->flash('update_success', '更新が完了しました');
         } catch (\Exception $e) {
             DB::rollback();
         }

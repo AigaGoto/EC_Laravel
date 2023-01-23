@@ -1,5 +1,9 @@
 version: '3.8'
 
+volumes:
+  db-volume:
+  maildir: {}
+
 services:
   db:
     image: mariadb:10.3.9
@@ -13,6 +17,7 @@ services:
     ports:
       - "43336:3306"
     command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci --wait-timeout=1800 --connect-timeout=1800 --net-read-timeout=1800 --max-allowed-packet=1G --innodb-buffer-pool-size=1G
+
   php-apache:
     container_name: php-apache
     build:
@@ -24,6 +29,7 @@ services:
       - ./apache/default.conf:/etc/apache2/sites-enabled/000-default.conf
     depends_on:
       - db
+
   phpmyadmin:
     image: phpmyadmin:latest
     container_name: ec-phpmydmin
@@ -36,3 +42,14 @@ services:
       - PMA_HOSTS=ec-db
       - PMA_USER=root
       - PMA_PASSWORD=dev_ec
+
+  mail:
+    image: mailhog/mailhog
+    container_name: mailhog
+    ports:
+      - "8025:8025"
+    environment:
+      MH_STORAGE: maildir
+      MH_MAILDIR_PATH: /tmp
+    volumes:
+      - maildir:/tmp

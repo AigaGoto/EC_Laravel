@@ -28,6 +28,7 @@ class ReviewController extends Controller
         $reviews = Review::with('user', 'product')->when($keyword, function ($query, $keyword) {
             return $query->where('review_content', 'LIKE', "%{$keyword}%");
         })
+        ->latest()
         ->paginate(\Consts::PAGINATE_NUM);
 
         // レビューに基づいたユーザーと商品のデータを紐付ける

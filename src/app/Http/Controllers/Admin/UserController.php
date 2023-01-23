@@ -98,6 +98,7 @@ class UserController extends Controller
             $createLogService->createLog(\Consts::LOG_UPDATE, \Consts::TABLE_USER, Auth::id(), $request);
 
             DB::commit();
+            session()->flash('update_success', '更新が完了しました');
         } catch (\Exception $e) {
             DB::rollback();
         }
