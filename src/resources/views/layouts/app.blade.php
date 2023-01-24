@@ -22,6 +22,14 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/style.css') .'?'.time() }}" rel="stylesheet">
+
+    <!-- Croppie -->
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="{{ asset('js/croppie.js') }}" defer></script>
+    <link href="{{ asset('css/croppie.css') }}" rel="stylesheet">
+    <script src="{{ asset('js/mycrop.js') }}" defer></script>
+    <link href="{{ asset('css/mycrop.css') }}" rel="stylesheet">
 </head>
 <body>
     <div id="app">

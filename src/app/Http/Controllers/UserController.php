@@ -38,16 +38,21 @@ class UserController extends Controller
             'user_icon_image' => 'file|image',
         ]);
 
+        // dd($request->user_icon_image);
+
         $root_path = 'public/sample/';
 
         $newImage = $request->file('user_icon_image');
+
+        $newImage = base64_decode(explode(",", $request->cropImage)[1]);
 
         $file_name = Auth::user()->user_icon_image;
 
         if(isset($newImage)) {
             \Storage::delete($root_path . $file_name);
-            $file_name = Auth::id() ."." . $newImage->getClientOriginalExtension();
-            $path = $newImage->storeAs($root_path, $file_name);
+            $file_name = Auth::id() ."." . 'jpg';
+            $save_file_path =storage_path() .'/app/'. $root_path . $file_name;
+            \file_put_contents($save_file_path, $newImage);
         }
 
         DB::beginTransaction();

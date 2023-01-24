@@ -13,6 +13,25 @@
             </div>
         @endif
 
+        <div id="main">
+            <div class="modal fade" id="cropImagePop" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="upload-demo" class="center-block"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="modal-btn-cancel" data-dismiss="modal">キャンセル</button>
+                        <button type="button" id="cropImageBtn" class="modal-bton-crop">決定</button>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <form method="POST" action="{{ route('user.profileUpdate') }}" enctype="multipart/form-data">
             @csrf
 
@@ -24,16 +43,18 @@
                     <div class="profile-user-icon">
                         @include('layouts.userIcon', ['user_icon_image'=>Auth::user()->user_icon_image])
                         <label class="white-button edit-user-icon-button">
-                            <input id="user_icon_image" type="file" name="user_icon_image" value="{{ Auth::user()->user_icon_image }}" onchange="previewImage(this);">
+                            <input class="image" type="file" id="user_icon_image" name="user_icon_image" onchange="previewImage(this);">
                             <iconify-icon icon="akar-icons:pencil" /></iconify-icon>
                             編集
                         </label>
                     </div>
                     <div class="profile-user-icon-preview" id="preview-display" style="display: none">
                         <iconify-icon icon="material-symbols:double-arrow"></iconify-icon>
-                        <img id="preview" class="">
+                        <img id="image-output" class="">
                     </div>
                 </div>
+
+                <input type="hidden" name="cropImage" id="cropImage" value="">
 
                 @error('user_icon_image')
                     <span class="invalid-feedback" role="alert">
