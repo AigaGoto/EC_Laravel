@@ -29,21 +29,24 @@
         <input type="hidden" name="_method" value="PUT">
 
         <div class="profile-item">
+            @include('layouts.croppie')
             <label for="user_icon_image" >{{ __('アイコン画像') }}</label>
             <div class="profile-preview-block">
                 <div class="profile-user-icon">
                     @include('layouts.userIcon', ['user_icon_image'=>$user->user_icon_image])
                     <label class="white-button edit-user-icon-button">
-                        <input id="user_icon_image" type="file" name="user_icon_image" value="{{ $user->user_icon_image }}" onchange="previewImage(this);">
+                        <input class="image" type="file" onchange="previewImage(this);">
                         <iconify-icon icon="akar-icons:pencil" /></iconify-icon>
                         編集
                     </label>
                 </div>
                 <div class="profile-user-icon-preview" id="preview-display" style="display: none">
                     <iconify-icon icon="material-symbols:double-arrow"></iconify-icon>
-                    <img id="preview" class="">
+                    <img id="image-output" class="">
                 </div>
             </div>
+
+            <input type="hidden" name="user_icon_image" id="user_icon_image" value="">
 
             @error('user_icon_image')
                 <span class="invalid-feedback" role="alert">
@@ -116,12 +119,6 @@
 <script>
     function previewImage(obj)
     {
-        let fileReader = new FileReader();
-        fileReader.onload = (function() {
-            document.getElementById('preview').src = fileReader.result;
-        });
-        fileReader.readAsDataURL(obj.files[0]);
-
         document.getElementById('preview-display').style = "";
     }
 </script>

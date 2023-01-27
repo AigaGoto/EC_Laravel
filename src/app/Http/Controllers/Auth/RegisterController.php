@@ -68,20 +68,23 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        if (!empty($data['user_icon_image'])) {
+        $newImage = base64_decode(explode(",", $data['user_icon_image'])[1]);
+        if (!empty($newImage)) {
             $dir = 'sample';
 
             $latest_user_id = User::latest('user_id')->first()->user_id;
-            // extension拡張子を取得する
-            $extension = $data['user_icon_image']->extension();
+
+            $root_path = '/app/public/sample/';
 
             // ユーザーIDの一番後ろ + 1 でfile_nameを設定する
-            $file_name = ($latest_user_id+1) . '.'. $extension;
+            $file_name = ($latest_user_id+1) . '.'. 'jpg';
 
-            $data['user_icon_image']->storeAs('public/' . $dir, $file_name);
+            $save_file_path =storage_path() . $root_path . $file_name;
+            \file_put_contents($save_file_path, $newImage);
         } else {
             $file_name = '';
         }
+
 
         DB::beginTransaction();
         try {

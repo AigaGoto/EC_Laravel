@@ -44,8 +44,7 @@ $('#cropImageBtn').on('click', function (ev) {
         size: { width: 320, height: 320 }
     }).then(function (resp) {
         $('#image-output').attr('src', resp);
-        $('#user-icon-image').val(resp);
-        $('#cropImage').val(resp);
+        $('#user_icon_image').val(resp);
         $('#cropImagePop').modal('hide');
     });
 });

@@ -35,23 +35,20 @@ class UserController extends Controller
             'user_name' => 'required|string|max:20',
             'user_birthday' => 'required|date',
             'user_gender' => 'required|between:1,2',
-            'user_icon_image' => 'file|image',
         ]);
 
-        // dd($request->user_icon_image);
+        $root_path = '/app/public/sample/';
 
-        $root_path = 'public/sample/';
-
-        $newImage = $request->file('user_icon_image');
-
-        $newImage = base64_decode(explode(",", $request->cropImage)[1]);
+        if (!empty($request->user_icon_image)){
+            $newImage = base64_decode(explode(",", $request->user_icon_image)[1]);
+        }
 
         $file_name = Auth::user()->user_icon_image;
 
         if(isset($newImage)) {
             \Storage::delete($root_path . $file_name);
             $file_name = Auth::id() ."." . 'jpg';
-            $save_file_path =storage_path() .'/app/'. $root_path . $file_name;
+            $save_file_path =storage_path() . $root_path . $file_name;
             \file_put_contents($save_file_path, $newImage);
         }
 

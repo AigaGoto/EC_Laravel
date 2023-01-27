@@ -47,8 +47,6 @@
                             </div>
                         </div>
 
-                        <div>-----</div>
-
                         <div class="form-group row">
                             <label for="user_name" class="col-md-4 col-form-label text-md-right">{{ __('名前') }}</label>
 
@@ -95,10 +93,20 @@
                         </div>
 
                         <div class="form-group row">
+                            @include('layouts.croppie')
                             <label for="user_icon_image" class="col-md-4 col-form-label text-md-right">{{ __('アイコン画像') }}</label>
 
                             <div class="col-md-6">
-                                <input id="user_icon_image" type="file" class="form-control @error('user_icon_image') is-invalid @enderror" name="user_icon_image"  >
+                                <label class="white-button edit-user-icon-button">
+                                    <input class="image" type="file" onchange="previewImage(this);">
+                                    ファイルを選択
+                                </label>
+
+                                <div class="profile-user-icon-preview" id="preview-display" style="display: none">
+                                    <img id="image-output" class="">
+                                </div>
+
+                                <input type="hidden" name="user_icon_image" id="user_icon_image" value="11">
 
                                 @error('user_icon_image')
                                     <span class="invalid-feedback" role="alert">
@@ -122,3 +130,10 @@
     </div>
 </div>
 @endsection
+
+<script>
+    function previewImage(obj)
+    {
+        document.getElementById('preview-display').style = "";
+    }
+</script>

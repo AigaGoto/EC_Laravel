@@ -28,8 +28,8 @@
     <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
     <script src="{{ asset('js/croppie.js') }}" defer></script>
     <link href="{{ asset('css/croppie.css') }}" rel="stylesheet">
-    <script src="{{ asset('js/mycrop.js') }}" defer></script>
-    <link href="{{ asset('css/mycrop.css') }}" rel="stylesheet">
+    <script src="{{ asset('js/mycrop.js'."?". date("YmdHis")) }}" defer></script>
+    <link href="{{ asset('css/mycrop.css'."?". date("YmdHis"))  }}" rel="stylesheet">
 </head>
 <body>
     <div id="app">
